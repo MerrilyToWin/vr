@@ -8,12 +8,16 @@ window.adminCharts = {
   waveformChart: null,
   cardioChart: null,
   accuracyChart: null,
+  patientRadarChart: null,
+  patientTrendChart: null,
 
   init() {
     this.initFPSChart();
     this.initWaveformChart();
     this.initCardioChart();
     this.initAccuracyChart();
+    this.initPatientRadarChart();
+    this.initPatientTrendChart();
   },
 
   // 1. FPS History Line Chart
@@ -59,7 +63,7 @@ window.adminCharts = {
     const ctx = document.getElementById('chart-sensor-waveform')?.getContext('2d');
     if (!ctx) return;
 
-    // Buffer: last 30 samples
+    // Buffer: last 35 samples
     const labels = Array(35).fill('');
     const magData = Array(35).fill(9.8);
     const filterData = Array(35).fill(9.8);
@@ -166,6 +170,96 @@ window.adminCharts = {
     });
   },
 
+  // 5. Patient Functional Rehabilitation Radar Chart
+  initPatientRadarChart() {
+    const ctx = document.getElementById('chart-patient-radar')?.getContext('2d');
+    if (!ctx) return;
+
+    this.patientRadarChart = new Chart(ctx, {
+      type: 'radar',
+      data: {
+        labels: [
+          'Hand-Eye Coordination',
+          'Postural Stability',
+          'Cardio Endurance',
+          'Reaction Speed',
+          'Stride Consistency',
+          'Agility'
+        ],
+        datasets: [{
+          label: 'Patient Assessment Score',
+          data: [60, 60, 60, 60, 60, 60],
+          backgroundColor: 'rgba(37, 99, 235, 0.25)',
+          borderColor: '#2563EB',
+          borderWidth: 2,
+          pointBackgroundColor: '#2563EB',
+          pointBorderColor: '#fff',
+          pointHoverBackgroundColor: '#fff',
+          pointHoverBorderColor: '#2563EB'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          r: {
+            angleLines: { color: 'rgba(0, 0, 0, 0.1)' },
+            grid: { color: 'rgba(0, 0, 0, 0.08)' },
+            suggestedMin: 0,
+            suggestedMax: 100,
+            ticks: { display: false }
+          }
+        },
+        plugins: {
+          legend: { display: false }
+        }
+      }
+    });
+  },
+
+  // 6. Patient Progression Trend Chart
+  initPatientTrendChart() {
+    const ctx = document.getElementById('chart-patient-trend')?.getContext('2d');
+    if (!ctx) return;
+
+    this.patientTrendChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['Session 1'],
+        datasets: [
+          {
+            label: 'Score Progression',
+            data: [0],
+            borderColor: '#22C55E',
+            backgroundColor: 'rgba(34, 197, 94, 0.1)',
+            borderWidth: 2.5,
+            tension: 0.3,
+            fill: true
+          },
+          {
+            label: 'Accuracy / Stability %',
+            data: [0],
+            borderColor: '#3B82F6',
+            borderWidth: 2,
+            borderDash: [4, 4],
+            tension: 0.3,
+            fill: false
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.03)' } }
+        },
+        plugins: {
+          legend: { display: true, position: 'top', labels: { boxWidth: 10, font: { size: 10 } } }
+        }
+      }
+    });
+  },
+
   // Add new FPS value to dataset
   pushFPS(fps) {
     if (!this.fpsChart) return;
@@ -207,6 +301,20 @@ window.adminCharts = {
     this.accuracyChart.update();
   },
 
+  updatePatientRadar(scores) {
+    if (!this.patientRadarChart) return;
+    this.patientRadarChart.data.datasets[0].data = scores;
+    this.patientRadarChart.update();
+  },
+
+  updatePatientTrend(labels, scoreData, accuracyData) {
+    if (!this.patientTrendChart) return;
+    this.patientTrendChart.data.labels = labels.length ? labels : ['Session 1'];
+    this.patientTrendChart.data.datasets[0].data = scoreData.length ? scoreData : [0];
+    this.patientTrendChart.data.datasets[1].data = accuracyData.length ? accuracyData : [0];
+    this.patientTrendChart.update();
+  },
+
   // Reset all charts
   clear() {
     if (this.fpsChart) {
@@ -228,6 +336,18 @@ window.adminCharts = {
     if (this.accuracyChart) {
       this.accuracyChart.data.datasets[0].data = [0, 0];
       this.accuracyChart.update();
+    }
+
+    if (this.patientRadarChart) {
+      this.patientRadarChart.data.datasets[0].data = [60, 60, 60, 60, 60, 60];
+      this.patientRadarChart.update();
+    }
+
+    if (this.patientTrendChart) {
+      this.patientTrendChart.data.labels = ['Session 1'];
+      this.patientTrendChart.data.datasets[0].data = [0];
+      this.patientTrendChart.data.datasets[1].data = [0];
+      this.patientTrendChart.update();
     }
   }
 };

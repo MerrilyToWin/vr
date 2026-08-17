@@ -226,17 +226,24 @@ export function initBallGame() {
 }
 
 function handleLiveMovement(data) {
-  const accel = data.linearAccel || data.motion || data.accelerometer || {};
-  const gyro = data.gyroscope || {};
+  const accel = data?.linearAccel || data?.motion || data?.accelerometer || {};
+  const gyro = data?.gyroscope || {};
   const cameraRig = document.getElementById('camera-rig');
   if (!cameraRig) return;
 
-  const targetX = Math.max(Math.min((accel.x || 0) * 0.035 + (gyro.y || 0) * 0.02, 0.35), -0.35);
-  const targetY = Math.max(Math.min((accel.y || 0) * 0.012, 0.12), -0.12);
-  bodySwayX = bodySwayX * 0.85 + targetX * 0.15;
-  bodySwayY = bodySwayY * 0.85 + targetY * 0.15;
+  const rawX = (accel.x || 0) * 0.035 + (gyro.y || 0) * 0.02;
+  const rawY = (accel.y || 0) * 0.012;
+  
+  const safeX = Number.isFinite(rawX) ? Math.max(Math.min(rawX, 0.35), -0.35) : 0;
+  const safeY = Number.isFinite(rawY) ? Math.max(Math.min(rawY, 0.12), -0.12) : 0;
+  
+  bodySwayX = Number.isFinite(bodySwayX) ? bodySwayX * 0.85 + safeX * 0.15 : safeX;
+  bodySwayY = Number.isFinite(bodySwayY) ? bodySwayY * 0.85 + safeY * 0.15 : safeY;
 
-  cameraRig.setAttribute('position', `${bodySwayX.toFixed(3)} ${(1.6 + bodySwayY).toFixed(3)} 0`);
+  const finalX = Number.isFinite(bodySwayX) ? bodySwayX : 0;
+  const finalY = Number.isFinite(bodySwayY) ? 1.6 + bodySwayY : 1.6;
+
+  cameraRig.setAttribute('position', `${finalX.toFixed(3)} ${finalY.toFixed(3)} 0`);
 }
 
 // Pre-game 5-second countdown
@@ -353,24 +360,31 @@ function spawnBall() {
   }
   
   // Set dimensions and position
-  // Spawn in a cone/sphere in front of the player (Z: -4 to -8)
-  const x = (Math.random() * 6 - 3).toFixed(2); // -3 to 3
-  const y = (Math.random() * 2.2 + 0.8).toFixed(2); // 0.8 to 3.0
-  const z = -(Math.random() * 4 + 4).toFixed(2); // -4 to -8
+  // Spawn in a cone directly in front of camera (Z: -3.5 to -5.5, X: -1.6 to 1.6, Y: 1.0 to 2.2)
+  const x = (Math.random() * 3.2 - 1.6).toFixed(2); // -1.6 to 1.6
+  const y = (Math.random() * 1.2 + 1.0).toFixed(2); // 1.0 to 2.2
+  const z = -(Math.random() * 2.0 + 3.5).toFixed(2); // -3.5 to -5.5
   
   ball.setAttribute('id', ballId);
   ball.setAttribute('position', `${x} ${y} ${z}`);
   ball.setAttribute('radius', radius);
-  ball.setAttribute('color', color);
   ball.setAttribute('class', 'catchable');
-  ball.setAttribute('material', `shader: standard; metalness: 0.3; roughness: 0.2; emissive: ${color}; emissiveIntensity: 0.2`);
+  ball.setAttribute('material', `shader: standard; color: ${color}; emissive: ${color}; emissiveIntensity: 0.6; metalness: 0.2; roughness: 0.3`);
   
-  // Curved Flight Path Animation Component
+  // Outer glowing ring accent
+  const ring = document.createElement('a-ring');
+  ring.setAttribute('radius-inner', (radius * 1.15).toFixed(2));
+  ring.setAttribute('radius-outer', (radius * 1.3).toFixed(2));
+  ring.setAttribute('material', `shader: flat; color: ${color}; opacity: 0.85; transparent: true`);
+  ring.setAttribute('animation__spin', 'property: rotation; to: 0 0 360; dur: 2000; loop: true; easing: linear');
+  ball.appendChild(ring);
+
+  // Curved Flight Path Animation Component (smooth 6s duration)
   ball.setAttribute('curved-flight', {
     startX: parseFloat(x),
     startY: parseFloat(y),
     startZ: parseFloat(z),
-    duration: 4000
+    duration: 6000
   });
   
   // Pulse animation to make it visually premium

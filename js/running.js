@@ -289,28 +289,54 @@ function tick() {
   // 3. Real-Time Head Bobbing (Sinusoidal camera bobbing based on speed)
   const camera = document.getElementById('main-camera');
   if (camera) {
+    let rotX = 0;
+    let rotY = 0;
+    let rotZ = 0;
+    let posY = 1.6;
+
+    const rawRot = camera.getAttribute('rotation');
+    if (typeof rawRot === 'object' && rawRot !== null) {
+      rotX = Number.isFinite(rawRot.x) ? rawRot.x : 0;
+      rotY = Number.isFinite(rawRot.y) ? rawRot.y : 0;
+      rotZ = Number.isFinite(rawRot.z) ? rawRot.z : 0;
+    } else if (typeof rawRot === 'string') {
+      const parts = rawRot.trim().split(/\s+/).map(Number);
+      if (parts.length >= 3) {
+        rotX = Number.isFinite(parts[0]) ? parts[0] : 0;
+        rotY = Number.isFinite(parts[1]) ? parts[1] : 0;
+        rotZ = Number.isFinite(parts[2]) ? parts[2] : 0;
+      }
+    }
+
+    const rawPos = camera.getAttribute('position');
+    if (typeof rawPos === 'object' && rawPos !== null) {
+      posY = Number.isFinite(rawPos.y) ? rawPos.y : 1.6;
+    } else if (typeof rawPos === 'string') {
+      const parts = rawPos.trim().split(/\s+/).map(Number);
+      if (parts.length >= 2) posY = Number.isFinite(parts[1]) ? parts[1] : 1.6;
+    }
+
     if (currentSpeed > 0.1) {
-      // Step frequency is proportional to running velocity
       const frequency = currentSpeed * 1.5;
       bobTime += dt * frequency;
 
       const bobY = Math.sin(bobTime) * 0.05 * (currentSpeed / 12);
-      const bobZ = Math.cos(bobTime * 0.5) * 1.2 * (currentSpeed / 12); // camera roll sway
+      const bobZ = Math.cos(bobTime * 0.5) * 1.2 * (currentSpeed / 12);
       
-      camera.setAttribute('position', `0 ${1.6 + bobY} 0`);
-      // Update Z roll rotation component cleanly
-      const rot = camera.getAttribute('rotation') || { x: 0, y: 0, z: 0 };
-      camera.setAttribute('rotation', `${rot.x} ${rot.y} ${bobZ}`);
+      const safeY = Number.isFinite(bobY) ? 1.6 + bobY : 1.6;
+      const safeZ = Number.isFinite(bobZ) ? bobZ : 0;
+
+      camera.setAttribute('position', `0 ${safeY.toFixed(3)} 0`);
+      camera.setAttribute('rotation', `${rotX.toFixed(2)} ${rotY.toFixed(2)} ${safeZ.toFixed(2)}`);
     } else {
-      // Smoothly return head to base rest values
-      const currentPos = camera.getAttribute('position') || { x: 0, y: 1.6, z: 0 };
-      const currentRot = camera.getAttribute('rotation') || { x: 0, y: 0, z: 0 };
+      const newY = posY * 0.9 + 1.6 * 0.1;
+      const newZRoll = rotZ * 0.9;
       
-      const newY = currentPos.y * 0.9 + 1.6 * 0.1;
-      const newZRoll = currentRot.z * 0.9;
-      
-      camera.setAttribute('position', `0 ${newY} 0`);
-      camera.setAttribute('rotation', `${currentRot.x} ${currentRot.y} ${newZRoll}`);
+      const safeY = Number.isFinite(newY) ? newY : 1.6;
+      const safeZ = Number.isFinite(newZRoll) ? newZRoll : 0;
+
+      camera.setAttribute('position', `0 ${safeY.toFixed(3)} 0`);
+      camera.setAttribute('rotation', `${rotX.toFixed(2)} ${rotY.toFixed(2)} ${safeZ.toFixed(2)}`);
     }
   }
 
