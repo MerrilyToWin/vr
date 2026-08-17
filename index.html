@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>SYNOVA - Immersive Mobile Fitness</title>
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="SYNOVA is an immersive mobile VR fitness application designed for low-cost VR headsets. Work out with Catch the Ball and VR Running using phone sensors.">
+  <meta name="keywords" content="VR fitness, WebXR, A-Frame, cardboard VR, phone motion fitness, VR running">
+  
+  <!-- CSS Stylesheets -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="css/animations.css">
+  
+  <!-- Third-party Javascript Libraries (Loaded in Head) -->
+  <!-- WebXR Polyfill — provides stereoscopic VR on browsers without native WebXR (iOS, older Android) -->
+  <script src="https://cdn.jsdelivr.net/npm/webxr-polyfill@latest/build/webxr-polyfill.min.js"></script>
+  <script>
+    // Initialize the polyfill before A-Frame loads so it detects WebXR support
+    if (typeof WebXRPolyfill !== 'undefined') {
+      new WebXRPolyfill({ cardboardConfig: { BUFFER_SCALE: 1.0 } });
+    }
+  </script>
+  <!-- A-Frame must be loaded in head for registering custom elements -->
+  <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+  <!-- Bootstrap Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- AOS animations library -->
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <!-- Chart.js library -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Lucide Icons library -->
+  <script src="https://cdn.jsdelivr.net/npm/lucide/dist/umd/lucide.min.js"></script>
+</head>
+<body data-theme="light">
+
+  <!-- SPA Viewport Container -->
+  <div id="app-viewport">
+    <!-- Simulated Smartphone Camera Notch (Visible on desktop screen widths) -->
+    <div class="dynamic-island d-none d-sm-flex">
+      <div class="dynamic-island-sensor"></div>
+      <span style="font-size: 0.65rem; font-weight: 700; color: rgba(255,255,255,0.45); letter-spacing: 0.5px;">SYNOVA ACTIVE</span>
+    </div>
+
+    <!-- Splash Screen (Initial View) -->
+    <div id="splash-screen" class="view-content fade-in d-flex flex-column align-items-center justify-content-center text-center">
+      <div class="logo-container mb-4">
+        <!-- Holographic Visor logo -->
+        <div class="vr-visor-container floating-card">
+          <div class="vr-visor-glass"></div>
+        </div>
+      </div>
+      
+      <h1 class="display-4 fw-bold mb-2" data-aos="fade-down" style="letter-spacing: -0.5px;">
+        <span class="text-gradient">SYNOVA</span>
+      </h1>
+      <p class="text-muted fs-5 mb-5" data-aos="fade-up" data-aos-delay="200" style="font-weight: 500;">
+        Turn your phone into a VR fitness trainer
+      </p>
+
+      <!-- Custom loading/start area -->
+      <div class="loading-area d-flex flex-column align-items-center" id="splash-action-container">
+        <!-- Lottie/CSS Loading Animation -->
+        <div class="loading-ring mb-4" id="splash-loader">
+          <div></div><div></div><div></div>
+        </div>
+        <p class="text-muted small" id="splash-status-text" style="font-weight: 500; letter-spacing: 0.2px;">Calibrating system sensors...</p>
+        <button id="btn-start-app" class="btn-premium d-none mt-2 pulse-glow" data-aos="zoom-in">
+          Get Started <i data-lucide="arrow-right"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Portrait/Landscape prompt for VR gameplay -->
+  <div id="rotate-overlay" class="rotate-overlay">
+    <div class="rotate-phone-icon"></div>
+    <h3 class="mb-2">Rotate Your Device</h3>
+    <p class="text-muted">SYNOVA runs in stereoscopic landscape mode. Please insert your phone sideways into your cardboard headset.</p>
+  </div>
+
+  <!-- Core App Controller (type="module") -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

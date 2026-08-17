@@ -1,0 +1,75 @@
+<!-- VR Running Challenge View -->
+<div id="view-root">
+  <div class="position-relative w-100 h-100" style="min-height: 100%; height: 100%; overflow: hidden; background: #F8FAFC;">
+    
+    <!-- 2D HUD Overlay (Exit Button) -->
+    <div id="game-hud" class="vr-hud-overlay d-none">
+      <button id="btn-stop-running" class="btn btn-light border btn-circle shadow" style="pointer-events: auto; z-index: 100; background: white !important; width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center;">
+        <i data-lucide="arrow-left" style="width: 20px; height: 20px; color: var(--primary-color);"></i>
+      </button>
+    </div>
+
+    <!-- Ready / Countdown Overlay Screen -->
+    <div id="countdown-overlay" class="position-absolute top-0 start-0 w-100 h-100 d-flex flex-column align-items-center justify-content-center text-center text-white" style="z-index: 999; background: rgba(9, 13, 22, 0.95); padding: 2rem;">
+      <div class="premium-card bg-transparent border-0 d-flex flex-column align-items-center">
+        <div class="btn-circle mb-3" style="width: 72px; height: 72px; background: linear-gradient(135deg, #22C55E 0%, #10B981 100%); animation: pulseGlow 2s infinite;">
+          <i data-lucide="footprints" style="width: 36px; height: 36px; color: white;"></i>
+        </div>
+        <h3 class="fw-bold mb-2">VR Running Challenge</h3>
+        <p class="text-muted small mb-4" style="max-width: 350px;">
+          Hold the phone in landscape, insert it into your VR headset, and run in place to speed along the digital track.
+          <br><br>
+          <strong>Desktop Controls:</strong> Press <strong>Spacebar</strong> to take running steps.
+        </p>
+        
+        <!-- Big countdown number -->
+        <h1 class="display-1 fw-bold text-gradient mb-4" id="countdown-number">5</h1>
+        
+        <p class="text-muted small mb-0">Get ready to run...</p>
+      </div>
+    </div>
+
+    <!-- A-Frame VR Environment -->
+    <a-scene embedded style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" vr-mode-ui="enabled: false" webxr="requiredFeatures: local" device-orientation-permission-ui="enabled: false">
+      
+      <!-- Central Camera rig with look controls -->
+      <a-entity id="camera-rig" position="0 1.6 0">
+        <a-entity id="main-camera" camera look-controls wasd-controls="enabled: false">
+          
+          <!-- Gaze Reticle (thin dot in running for central gaze alignment) -->
+          <a-entity id="gaze-cursor"
+                    cursor="fuse: false"
+                    position="0 0 -1"
+                    geometry="primitive: ring; radiusInner: 0.005; radiusOuter: 0.008"
+                    material="color: #cbd5e1; shader: flat; opacity: 0.4">
+          </a-entity>
+        </a-entity>
+      </a-entity>
+
+      <!-- VR Environment Objects -->
+      <!-- Retro Neon Sky -->
+      <a-sky color="#03000a"></a-sky>
+      
+      <!-- Stars container (twinkling dots in sky) -->
+      <a-entity id="stars-container"></a-entity>
+
+      <!-- The Neon Running Track Grid -->
+      <a-plane id="running-track" position="0 0.01 -50" rotation="-90 0 0" width="8" height="150" color="#1e1b4b" material="roughness: 0.9; metalness: 0.1;"></a-plane>
+      <a-plane id="running-track-border-l" position="-4.05 0.02 -50" rotation="-90 0 0" width="0.1" height="150" color="#22c55e" material="emissive: #22c55e; emissiveIntensity: 0.8; shader: flat;"></a-plane>
+      <a-plane id="running-track-border-r" position="4.05 0.02 -50" rotation="-90 0 0" width="0.1" height="150" color="#22c55e" material="emissive: #22c55e; emissiveIntensity: 0.8; shader: flat;"></a-plane>
+      
+      <!-- Scenery grid lines (scrolled to simulate motion) -->
+      <a-entity id="scenery-container"></a-entity>
+
+      <!-- Ground plane (Very dark grid representation) -->
+      <a-plane position="0 0 0" rotation="-90 0 0" width="1000" height="1000" color="#030206" material="roughness: 1.0;"></a-plane>
+
+      <!-- Ambient Lighting -->
+      <a-light type="ambient" color="#1e1b4b" intensity="0.5"></a-light>
+      <!-- Sunset directional lights -->
+      <a-light type="directional" color="#22c55e" intensity="0.4" position="5 10 -5"></a-light>
+      <a-light type="directional" color="#3b82f6" intensity="0.4" position="-5 10 -5"></a-light>
+      
+    </a-scene>
+  </div>
+</div>

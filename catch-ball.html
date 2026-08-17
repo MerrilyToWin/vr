@@ -1,0 +1,85 @@
+<!-- Catch Ball VR Game View -->
+<div id="view-root">
+  <div class="position-relative w-100 h-100" style="min-height: 100%; height: 100%; overflow: hidden; background: #87CEEB;">
+    
+    <!-- 2D HUD Overlay (Floating cards for score, time, combo) -->
+    <div id="game-hud" class="vr-hud-overlay d-none">
+      <div class="hud-pill" style="gap: 0.8rem;">
+        <span id="hud-score">Score: 0</span>
+        <span id="hud-combo">Combo: 0</span>
+        <span id="hud-time">60s</span>
+      </div>
+      <button id="btn-exit-game" class="btn btn-light border btn-circle shadow" style="pointer-events: auto; z-index: 100; background: white !important; width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center;">
+        <i data-lucide="arrow-left" style="width: 20px; height: 20px; color: var(--primary-color);"></i>
+      </button>
+    </div>
+
+    <!-- Ready / Countdown Overlay Screen (Allows setting phone in Cardboard) -->
+    <div id="countdown-overlay" class="position-absolute top-0 start-0 w-100 h-100 d-flex flex-column align-items-center justify-content-center text-center text-white" style="z-index: 999; background: linear-gradient(135deg, rgba(37, 99, 235, 0.95) 0%, rgba(6, 182, 212, 0.95) 100%); padding: 2rem;">
+      <div class="premium-card bg-transparent border-0 d-flex flex-column align-items-center">
+        <div class="btn-circle bg-white text-primary mb-3" style="width: 72px; height: 72px; animation: pulseGlow 2s infinite;">
+          <i data-lucide="glasses" style="width: 36px; height: 36px; color: var(--primary-color);"></i>
+        </div>
+        <h3 class="fw-bold mb-2">Prepare for VR Mode</h3>
+        <p class="text-white-50 small mb-4" style="max-width: 320px;">
+          Rotate your device to landscape, insert it into your Google Cardboard VR headset, and look around to find the colored balls.
+        </p>
+        
+        <!-- Big countdown number -->
+        <h1 class="display-1 fw-bold text-white mb-4" id="countdown-number" style="text-shadow: 0 0 20px rgba(255,255,255,0.4);">5</h1>
+        
+        <p class="text-white-50 small mb-0">Look at green, blue, and gold balls to catch them. Avoid red obstacles!</p>
+      </div>
+    </div>
+
+    <!-- A-Frame VR Environment -->
+    <!-- We embed the scene and style it to cover the entire page -->
+    <a-scene embedded style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" vr-mode-ui="enabled: false" webxr="requiredFeatures: local" device-orientation-permission-ui="enabled: false">
+      
+      <!-- Asset Management -->
+      <a-assets>
+        <!-- Material patterns can be loaded here if needed, but standard shaders are faster -->
+      </a-assets>
+
+      <!-- Central Camera rig with look controls and a ring gaze cursor -->
+      <a-entity id="camera-rig" position="0 1.6 0">
+        <a-entity id="main-camera" camera look-controls wasd-controls="enabled: false">
+
+          <!-- Gaze Reticle -->
+          <a-entity id="gaze-cursor"
+                    cursor="fuse: true; fuseTimeout: 450"
+                    position="0 0 -1"
+                    geometry="primitive: ring; radiusInner: 0.015; radiusOuter: 0.022"
+                    material="color: #cbd5e1; shader: flat; opacity: 0.7"
+                    animation__click="property: scale; startEvents: click; easing: easeOutElastic; dur: 150; from: 0.2 0.2 0.2; to: 1 1 1"
+                    animation__fusing="property: scale; startEvents: fusing; easing: easeInSine; dur: 450; from: 1 1 1; to: 0.15 0.15 0.15"
+                    animation__fusing_color="property: material.color; startEvents: fusing; easing: easeInSine; dur: 450; from: #cbd5e1; to: #3b82f6"
+                    animation__mouseleave="property: scale; startEvents: mouseleave; easing: easeOutQuad; dur: 200; to: 1 1 1"
+                    animation__mouseleave_color="property: material.color; startEvents: mouseleave; easing: easeOutQuad; dur: 200; to: #cbd5e1">
+          </a-entity>
+        </a-entity>
+      </a-entity>
+
+      <!-- VR Environment Objects -->
+      <!-- Colorful Sky background -->
+      <a-sky color="#87CEEB"></a-sky>
+
+      <!-- Solid Grassy Ground Plane -->
+      <a-plane id="ground" position="0 0 0" rotation="-90 0 0" width="100" height="100" color="#5c8f62" material="roughness: 1; metalness: 0"></a-plane>
+      
+      <!-- Grid Floor on top of ground for depth perception -->
+      <a-grid id="floor" static-body geometry="primitive: plane; width: 100; height: 100" rotation="-90 0 0" material="color: #ffffff; wireframe: true; opacity: 0.25"></a-grid>
+      
+      <!-- Bright Outdoor Lighting -->
+      <a-light type="ambient" color="#bde0fe" intensity="0.6"></a-light>
+      <a-light type="directional" color="#fefae0" intensity="0.8" position="-1 4 1"></a-light>
+      
+      <!-- Parent entity for generated clouds -->
+      <a-entity id="clouds-container"></a-entity>
+
+      <!-- Spawning zone / Parent entity for generated targets -->
+      <a-entity id="target-container"></a-entity>
+      
+    </a-scene>
+  </div>
+</div>

@@ -1,0 +1,231 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --primary-gradient: linear-gradient(135deg, #2563EB 0%, #3B82F6 50%, #06B6D4 100%);
+  --primary-color: #2563EB;
+  --secondary-color: #3B82F6;
+  --accent-cyan: #06B6D4;
+  --accent-green: #22C55E;
+  --danger-color: #EF4444;
+  
+  --bg-color: #F8FAFC;
+  --card-bg: rgba(255, 255, 255, 0.75);
+  --card-border: rgba(0, 0, 0, 0.05);
+  --text-color: #0F172A;
+  --text-muted: #64748B;
+  
+  --sidebar-width: 260px;
+  --sidebar-bg: #FFFFFF;
+  --sidebar-border: rgba(0, 0, 0, 0.05);
+  
+  --shadow-soft: 0 10px 30px -10px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02);
+  --shadow-medium: 0 20px 40px -15px rgba(0, 0, 0, 0.06), 0 1px 5px rgba(0, 0, 0, 0.03);
+  --card-radius: 20px;
+  --btn-radius: 12px;
+  --font-family: 'Poppins', sans-serif;
+  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Dark mode theme variables for admin */
+[data-theme="dark"] {
+  --bg-color: #0B0F19;
+  --card-bg: rgba(21, 29, 47, 0.7);
+  --card-border: rgba(255, 255, 255, 0.06);
+  --text-color: #F8FAFC;
+  --text-muted: #94A3B8;
+  --sidebar-bg: #0F172A;
+  --sidebar-border: rgba(255, 255, 255, 0.05);
+  --shadow-soft: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
+  --shadow-medium: 0 20px 40px -15px rgba(0, 0, 0, 0.4);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  min-height: 100vh;
+  display: flex;
+  overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Sidebar styling */
+.admin-sidebar {
+  width: var(--sidebar-width);
+  background-color: var(--sidebar-bg);
+  border-right: 1px solid var(--sidebar-border);
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  z-index: 1000;
+  transition: var(--transition-smooth);
+}
+
+.sidebar-brand {
+  font-weight: 800;
+  font-size: 1.3rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 2rem;
+}
+
+.sidebar-menu {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.menu-item a {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.75rem 1rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-weight: 500;
+  border-radius: var(--btn-radius);
+  transition: var(--transition-smooth);
+}
+
+.menu-item a:hover,
+.menu-item.active a {
+  background: rgba(37, 99, 235, 0.08);
+  color: var(--primary-color);
+}
+
+.menu-item.active a {
+  font-weight: 600;
+}
+
+/* Layout container */
+.admin-layout {
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  padding: 2rem;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  transition: var(--transition-smooth);
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.panel-section {
+  display: none;
+}
+
+.panel-section.active {
+  display: block;
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Premium Card Styles */
+.admin-card {
+  background: var(--card-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--card-border);
+  border-radius: var(--card-radius);
+  box-shadow: var(--shadow-soft);
+  padding: 1.5rem;
+  transition: var(--transition-smooth);
+  height: 100%;
+}
+
+.admin-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-medium);
+}
+
+/* Live Session badge */
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 30px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.status-pill.online {
+  background-color: rgba(34, 197, 94, 0.12);
+  color: var(--accent-green);
+}
+
+.status-pill.offline {
+  background-color: rgba(100, 116, 139, 0.12);
+  color: var(--text-muted);
+}
+
+/* Input elements */
+.admin-input {
+  background: rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  padding: 0.65rem 0.9rem;
+  color: var(--text-color);
+  width: 100%;
+  outline: none;
+  transition: var(--transition-smooth);
+}
+
+[data-theme="dark"] .admin-input {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.admin-input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+/* responsive media tags */
+@media (max-width: 991px) {
+  .admin-sidebar {
+    transform: translateX(-100%);
+  }
+  .admin-sidebar.open {
+    transform: translateX(0);
+  }
+  .admin-layout {
+    margin-left: 0;
+    padding: 1.25rem;
+  }
+  
+  .hamburger-btn {
+    display: block !important;
+  }
+}
+
+.hamburger-btn {
+  display: none;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: 0.5rem;
+  cursor: pointer;
+}

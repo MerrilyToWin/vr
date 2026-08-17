@@ -1,0 +1,178 @@
+<!-- Dashboard View -->
+<div id="view-root">
+  <div class="dashboard-container py-3">
+    <!-- Top Dashboard Header with Profile Indicator & Settings -->
+    <div class="d-flex justify-content-between align-items-center mb-4 mt-3">
+      <div class="d-flex align-items-center gap-3">
+        <!-- Profile Avatar with dynamic gradient ring -->
+        <div class="avatar-ring">
+          <div class="avatar-inner">
+            <span class="text-gradient" style="font-size: 0.95rem; font-weight: 800; font-family: var(--font-family);">VR</span>
+          </div>
+        </div>
+        <div>
+          <p class="text-muted mb-0" style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Athlete Hub</p>
+          <h4 class="fw-bold mb-0" style="font-size: 1.25rem; letter-spacing: -0.3px;">Hi, <span id="dash-username" class="text-gradient">Athlete</span></h4>
+        </div>
+      </div>
+      <div class="d-flex gap-2">
+        <a href="#settings" class="btn-premium btn-circle" aria-label="Settings">
+          <i data-lucide="sliders-horizontal" style="width: 20px; height: 20px;"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- Live Performance Stats Panel (3-Column Cyber Grid) -->
+    <div class="row g-3 mb-4">
+      <!-- Calories Card -->
+      <div class="col-4">
+        <div class="premium-card text-center p-3 h-100 d-flex flex-column align-items-center justify-content-center" style="border-radius: 20px; border-color: rgba(244, 63, 94, 0.15); box-shadow: 0 8px 20px -10px rgba(244, 63, 94, 0.2);">
+          <div class="d-flex align-items-center justify-content-center mb-1 text-danger">
+            <i data-lucide="fire" style="width: 18px; height: 18px; color: var(--danger-color);"></i>
+          </div>
+          <p class="text-muted mb-1" style="font-size: 0.65rem; text-transform: uppercase; font-weight: 600; letter-spacing: 0.3px;">Calories</p>
+          <h4 class="fw-bold mb-0 text-gradient" id="dash-calories" style="background: linear-gradient(135deg, #F43F5E 0%, #FB7185 100%); -webkit-background-clip: text; font-size: 1.15rem; letter-spacing: -0.5px;">0.0</h4>
+          <span class="text-muted" style="font-size: 0.62rem;">kcal</span>
+        </div>
+      </div>
+      
+      <!-- Duration Card -->
+      <div class="col-4">
+        <div class="premium-card text-center p-3 h-100 d-flex flex-column align-items-center justify-content-center" style="border-radius: 20px; border-color: rgba(16, 185, 129, 0.15); box-shadow: 0 8px 20px -10px rgba(16, 185, 129, 0.2);">
+          <div class="d-flex align-items-center justify-content-center mb-1 text-success">
+            <i data-lucide="timer" style="width: 18px; height: 18px; color: var(--accent-green);"></i>
+          </div>
+          <p class="text-muted mb-1" style="font-size: 0.65rem; text-transform: uppercase; font-weight: 600; letter-spacing: 0.3px;">Time</p>
+          <h4 class="fw-bold mb-0 text-gradient" id="dash-duration" style="background: linear-gradient(135deg, #10B981 0%, #34D399 100%); -webkit-background-clip: text; font-size: 1.15rem; letter-spacing: -0.5px;">00:00</h4>
+          <span class="text-muted" style="font-size: 0.62rem;">elapsed</span>
+        </div>
+      </div>
+
+      <!-- Score Card -->
+      <div class="col-4">
+        <div class="premium-card text-center p-3 h-100 d-flex flex-column align-items-center justify-content-center" style="border-radius: 20px; border-color: rgba(99, 102, 241, 0.15); box-shadow: 0 8px 20px -10px rgba(99, 102, 241, 0.25);">
+          <div class="d-flex align-items-center justify-content-center mb-1 text-primary">
+            <i data-lucide="sparkles" style="width: 18px; height: 18px; color: var(--primary-color);"></i>
+          </div>
+          <p class="text-muted mb-1" style="font-size: 0.65rem; text-transform: uppercase; font-weight: 600; letter-spacing: 0.3px;">Score</p>
+          <h4 class="fw-bold mb-0 text-gradient" id="dash-score" style="font-size: 1.15rem; letter-spacing: -0.5px;">0</h4>
+          <span class="text-muted" style="font-size: 0.62rem;">points</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex flex-column gap-4 mb-4">
+      <!-- Games Selector Section -->
+      <section>
+        <div class="d-flex align-items-center justify-content-between mb-3">
+          <h5 class="fw-bold mb-0" style="font-size: 1.05rem; letter-spacing: -0.2px;">Select VR Training</h5>
+          <span class="text-muted small" style="font-size: 0.72rem; font-weight: 500;">Cardboard Ready</span>
+        </div>
+        
+        <div class="d-flex flex-column gap-3">
+          <!-- Catch the Ball Game Card -->
+          <div class="premium-card card-game-blue p-3 d-flex align-items-center justify-content-between" style="border-radius: 22px;">
+            <div class="d-flex align-items-center gap-3">
+              <div class="btn-circle bg-primary text-white" style="width: 50px; height: 50px; border-radius: 16px; background: rgba(99, 102, 241, 0.12) !important; border-color: rgba(99, 102, 241, 0.2) !important;">
+                <i data-lucide="target" style="width: 24px; height: 24px; color: var(--primary-color);"></i>
+              </div>
+              <div>
+                <h6 class="fw-bold mb-0" style="font-size: 0.9rem;">Catch the Ball</h6>
+                <p class="text-muted mb-0" style="font-size: 0.72rem; line-height: 1.3;">Train neck muscles & reflexes in VR</p>
+              </div>
+            </div>
+            <a href="#catch-ball" class="btn-premium btn-circle" aria-label="Play Catch the Ball">
+              <i data-lucide="play" style="width: 18px; height: 18px; fill: currentColor; margin-left: 2px;"></i>
+            </a>
+          </div>
+
+          <!-- VR Running Card -->
+          <div class="premium-card card-game-green p-3 d-flex align-items-center justify-content-between" style="border-radius: 22px;">
+            <div class="d-flex align-items-center gap-3">
+              <div class="btn-circle text-white" style="width: 50px; height: 50px; border-radius: 16px; background: rgba(16, 185, 129, 0.12) !important; border-color: rgba(16, 185, 129, 0.2) !important;">
+                <i data-lucide="footprints" style="width: 24px; height: 24px; color: var(--accent-green);"></i>
+              </div>
+              <div>
+                <h6 class="fw-bold mb-0" style="font-size: 0.9rem;">VR Running Challenge</h6>
+                <p class="text-muted mb-0" style="font-size: 0.72rem; line-height: 1.3;">Cardio challenge running in place</p>
+              </div>
+            </div>
+            <a href="#running" class="btn-premium btn-circle" aria-label="Play VR Running">
+              <i data-lucide="play" style="width: 18px; height: 18px; fill: currentColor; margin-left: 2px;"></i>
+            </a>
+          </div>
+
+          <!-- Tight Rope Walk Card -->
+          <div class="premium-card card-game-gold p-3 d-flex align-items-center justify-content-between" style="border-radius: 22px;">
+            <div class="d-flex align-items-center gap-3">
+              <div class="btn-circle text-white" style="width: 50px; height: 50px; border-radius: 16px; background: rgba(245, 158, 11, 0.12) !important; border-color: rgba(245, 158, 11, 0.2) !important;">
+                <i data-lucide="activity" style="width: 24px; height: 24px; color: #f59e0b;"></i>
+              </div>
+              <div>
+                <h6 class="fw-bold mb-0" style="font-size: 0.9rem;">Tight Rope Walk</h6>
+                <p class="text-muted mb-0" style="font-size: 0.72rem; line-height: 1.3;">Test core balance & stability in VR</p>
+              </div>
+            </div>
+            <a href="#balance" class="btn-premium btn-circle" aria-label="Play Tight Rope Walk">
+              <i data-lucide="play" style="width: 18px; height: 18px; fill: currentColor; margin-left: 2px;"></i>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Score Analysis & Progress Tracking -->
+      <section class="premium-card p-3 shadow-medium" style="border-radius: 24px;">
+        <h5 class="fw-bold mb-3 d-flex align-items-center gap-2" style="font-size: 1.05rem;">
+          <i data-lucide="trending-up" style="color: var(--primary-color); width: 20px; height: 20px;"></i> Performance Trends
+        </h5>
+        <div style="height: 200px; position: relative;">
+          <canvas id="dashboard-progress-chart"></canvas>
+        </div>
+        <div class="row text-center mt-3 pt-2 g-1 small" style="border-top: 1px solid rgba(255, 255, 255, 0.05);">
+          <div class="col-4 border-end" style="border-color: rgba(255,255,255,0.05) !important;">
+            <p class="mb-0 text-muted fs-8 text-uppercase" style="font-size: 0.62rem; letter-spacing: 0.3px; font-weight: 600;">Best Score</p>
+            <p class="fw-bold mb-0 text-primary" id="pb-score" style="font-size: 1rem;">0</p>
+          </div>
+          <div class="col-4 border-end" style="border-color: rgba(255,255,255,0.05) !important;">
+            <p class="mb-0 text-muted fs-8 text-uppercase" style="font-size: 0.62rem; letter-spacing: 0.3px; font-weight: 600;">Max Combo</p>
+            <p class="fw-bold mb-0 text-success" id="pb-combo" style="font-size: 1rem;">0</p>
+          </div>
+          <div class="col-4">
+            <p class="mb-0 text-muted fs-8 text-uppercase" style="font-size: 0.62rem; letter-spacing: 0.3px; font-weight: 600;">Peak Speed</p>
+            <p class="fw-bold mb-0 text-warning" style="font-size: 1rem;"><span id="pb-speed">0.0</span> <span class="fs-9" style="font-size: 0.65rem;">km/h</span></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Workout Session History Table -->
+      <section class="premium-card p-3 shadow-soft" style="border-radius: 24px;">
+        <h5 class="fw-bold mb-3 d-flex align-items-center gap-2" style="font-size: 1.05rem;">
+          <i data-lucide="history" style="color: var(--accent-green); width: 20px; height: 20px;"></i> Workout History
+        </h5>
+        <div class="table-responsive" style="max-height: 240px; overflow-y: auto;">
+          <table class="table table-hover table-sm text-start mb-0" style="font-size: 0.75rem; --bs-table-bg: transparent; --bs-table-color: var(--text-color); --bs-table-hover-color: var(--text-color); --bs-table-hover-bg: rgba(255,255,255,0.02); border-color: rgba(255,255,255,0.05);">
+            <thead>
+              <tr class="text-muted" style="font-size: 0.65rem; text-transform: uppercase; border-bottom: 1.5px solid rgba(255,255,255,0.08); letter-spacing: 0.3px; font-weight: 600;">
+                <th>Date</th>
+                <th>Game</th>
+                <th>Score</th>
+                <th>Kcal</th>
+                <th>Details</th>
+              </tr>
+            </thead>
+            <tbody id="dashboard-history-tbody">
+              <tr>
+                <td colspan="5" class="text-center text-muted py-3">No workouts completed yet</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <!-- End Workout Session Actions -->
+    <a href="#summary" class="btn-outline-premium w-100 py-3 mb-2 d-flex align-items-center justify-content-center gap-2" style="border-color: var(--danger-color); color: var(--danger-color); font-weight: 700; border-radius: 18px;">
+      <i data-lucide="stop-circle" style="width: 20px; height: 20px;"></i> End Workout Session
+    </a>
+  </div>
+</div>

@@ -1,0 +1,468 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  /* Light Theme Defaults */
+  --bg-color: #F8FAFC;
+  --card-bg: rgba(255, 255, 255, 0.75);
+  --card-border: rgba(99, 102, 241, 0.08);
+  --text-color: #0F172A;
+  --text-muted: #64748B;
+  
+  --primary-gradient: linear-gradient(135deg, #4F46E5 0%, #3B82F6 50%, #0EA5E9 100%);
+  --primary-color: #4F46E5;
+  --secondary-color: #3B82F6;
+  --accent-cyan: #0EA5E9;
+  --accent-green: #10B981;
+  --danger-color: #E11D48;
+  
+  --shadow-soft: 0 10px 30px -10px rgba(79, 70, 229, 0.06), 0 1px 3px rgba(0, 0, 0, 0.01);
+  --shadow-medium: 0 20px 40px -15px rgba(79, 70, 229, 0.09), 0 1px 5px rgba(0, 0, 0, 0.02);
+  --shadow-glow: 0 15px 30px -5px rgba(79, 70, 229, 0.15);
+  
+  --font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --card-radius: 28px;
+  --btn-radius: 18px;
+  --transition-smooth: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+[data-theme="dark"] {
+  /* Dark Theme Overrides */
+  --bg-color: #0A0D1A;
+  --card-bg: rgba(20, 25, 43, 0.55);
+  --card-border: rgba(255, 255, 255, 0.07);
+  --text-color: #F8FAFC;
+  --text-muted: #94A3B8;
+  
+  --primary-gradient: linear-gradient(135deg, #6366F1 0%, #3B82F6 50%, #06B6D4 100%);
+  --primary-color: #6366F1;
+  --secondary-color: #3B82F6;
+  --accent-cyan: #06B6D4;
+  --accent-green: #10B981;
+  --danger-color: #F43F5E;
+  
+  --shadow-soft: 0 10px 30px -10px rgba(0, 0, 0, 0.4);
+  --shadow-medium: 0 20px 40px -15px rgba(0, 0, 0, 0.6);
+  --shadow-glow: 0 15px 30px -5px rgba(99, 102, 241, 0.25);
+}
+
+/* Base resets and defaults */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  overflow-x: hidden;
+  transition: background-color 0.5s ease, color 0.5s ease;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom premium scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(99, 102, 241, 0.15);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(99, 102, 241, 0.35);
+}
+
+/* Layout shell styles */
+#app-viewport {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.view-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 1.75rem;
+  max-width: 500px;
+  margin: 0 auto;
+  width: 100%;
+  justify-content: center;
+}
+
+.dashboard-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 1.75rem;
+  max-width: 1100px;
+  margin: 0 auto;
+  width: 100%;
+  justify-content: flex-start;
+}
+
+/* Glassmorphism Card Design */
+.premium-card {
+  background: var(--card-bg);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border: 1px solid var(--card-border);
+  border-radius: var(--card-radius);
+  box-shadow: var(--shadow-soft);
+  padding: 1.85rem;
+  transition: var(--transition-smooth);
+  position: relative;
+  overflow: hidden;
+}
+
+.premium-card:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: var(--shadow-medium);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.premium-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+}
+
+/* Premium Card Game Gradients */
+.card-game-blue:hover {
+  border-color: rgba(99, 102, 241, 0.4);
+  box-shadow: 0 15px 30px -10px rgba(99, 102, 241, 0.3);
+}
+.card-game-green:hover {
+  border-color: rgba(16, 185, 129, 0.4);
+  box-shadow: 0 15px 30px -10px rgba(16, 185, 129, 0.3);
+}
+.card-game-gold:hover {
+  border-color: rgba(245, 158, 11, 0.4);
+  box-shadow: 0 15px 30px -10px rgba(245, 158, 11, 0.3);
+}
+
+/* Gradient text utility */
+.text-gradient {
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: inline-block;
+  font-weight: 800;
+}
+
+/* Interactive elements buttons */
+.btn-premium {
+  background: var(--primary-gradient);
+  color: white !important;
+  border: none;
+  border-radius: var(--btn-radius);
+  padding: 0.95rem 1.85rem;
+  font-weight: 600;
+  font-size: 1rem;
+  box-shadow: var(--shadow-glow);
+  transition: var(--transition-smooth);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  position: relative;
+  overflow: hidden;
+  letter-spacing: 0.5px;
+}
+
+.btn-premium::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+  transform: skewX(-20deg);
+  transition: 0.75s;
+}
+
+.btn-premium:hover::after {
+  left: 120%;
+}
+
+.btn-premium:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 35px -5px rgba(99, 102, 241, 0.45);
+}
+
+.btn-premium:active {
+  transform: translateY(1px);
+}
+
+.btn-outline-premium {
+  background: transparent;
+  color: var(--text-color);
+  border: 1.5px solid var(--card-border);
+  border-radius: var(--btn-radius);
+  padding: 0.95rem 1.85rem;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: var(--transition-smooth);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
+.btn-outline-premium:hover {
+  background: var(--primary-gradient);
+  color: white !important;
+  border-color: transparent;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow);
+}
+
+.btn-circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--card-bg) !important;
+  border: 1px solid var(--card-border) !important;
+  color: var(--text-color) !important;
+  box-shadow: var(--shadow-soft) !important;
+  transition: var(--transition-smooth);
+}
+
+.btn-circle:hover {
+  transform: translateY(-3px) rotate(15deg);
+  border-color: var(--primary-color) !important;
+  box-shadow: var(--shadow-glow) !important;
+}
+
+/* Input Styles */
+.premium-input {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1.5px solid var(--card-border);
+  border-radius: 16px;
+  padding: 0.95rem 1.25rem;
+  color: var(--text-color);
+  font-size: 1rem;
+  width: 100%;
+  transition: var(--transition-smooth);
+  outline: none;
+}
+
+[data-theme="light"] .premium-input {
+  background: rgba(0, 0, 0, 0.02);
+  border: 1.5px solid rgba(0, 0, 0, 0.08);
+}
+
+.premium-input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* Custom switch toggle */
+.form-check-input {
+  cursor: pointer;
+}
+.form-switch .form-check-input {
+  background-color: rgba(255,255,255,0.08);
+  border-color: var(--card-border);
+  transition: var(--transition-smooth);
+}
+.form-switch .form-check-input:checked {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+}
+
+/* Floating HUD layout (for gameplay) */
+.vr-hud-overlay {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  right: 1rem;
+  display: flex;
+  justify-content: space-between;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.hud-pill {
+  background: rgba(10, 13, 26, 0.78);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.6rem 1.25rem;
+  border-radius: 30px;
+  color: white;
+  font-weight: 600;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  pointer-events: auto;
+}
+
+/* Quick utility styles */
+.badge-accent {
+  background: rgba(16, 185, 129, 0.12);
+  color: var(--accent-green);
+  font-weight: 600;
+  border-radius: 12px;
+  padding: 0.35rem 0.85rem;
+  font-size: 0.8rem;
+  border: 1px solid rgba(16, 185, 129, 0.15);
+}
+
+.badge-danger {
+  background: rgba(244, 63, 94, 0.12);
+  color: var(--danger-color);
+  font-weight: 600;
+  border-radius: 12px;
+  padding: 0.35rem 0.85rem;
+  font-size: 0.8rem;
+  border: 1px solid rgba(244, 63, 94, 0.15);
+}
+
+/* Avatar / Ring Visual */
+.avatar-ring {
+  background: var(--primary-gradient);
+  padding: 3px;
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
+}
+.avatar-inner {
+  background: var(--bg-color);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+/* Progress Bar indicator */
+.progress-bar-container {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  height: 8px;
+  overflow: hidden;
+  width: 100%;
+}
+.progress-bar-fill {
+  background: var(--primary-gradient);
+  height: 100%;
+  border-radius: 10px;
+  width: 0%;
+  transition: width 1s ease-out;
+  box-shadow: 0 0 8px rgba(99, 102, 241, 0.6);
+}
+
+/* VR Visual Headset / Visor CSS Animation */
+.vr-visor-container {
+  position: relative;
+  width: 130px;
+  height: 70px;
+  background: linear-gradient(135deg, #1f1b2e 0%, #110e1a 100%);
+  border-radius: 20px 20px 30px 30px;
+  border: 3px solid rgba(99, 102, 241, 0.4);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5), 0 0 15px rgba(99, 102, 241, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.vr-visor-glass {
+  width: 110px;
+  height: 40px;
+  background: linear-gradient(180deg, #06b6d4 0%, #6366f1 100%);
+  border-radius: 10px 10px 20px 20px;
+  position: relative;
+  box-shadow: 0 0 12px rgba(6, 182, 212, 0.8);
+}
+.vr-visor-glass::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: #fff;
+  opacity: 0.7;
+  animation: scanLine 2s infinite ease-in-out;
+}
+@keyframes scanLine {
+  0% { top: 5%; opacity: 0.1; }
+  50% { opacity: 0.9; }
+  100% { top: 90%; opacity: 0.1; }
+}
+
+/* Smartphone bezel styling for desktop */
+@media (min-width: 576px) and (min-height: 600px) {
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at 50% 30%, #1e1b3a 0%, #08070f 100%) !important;
+    min-height: 100vh;
+    margin: 0;
+    overflow: hidden;
+  }
+  
+  #app-viewport {
+    max-width: 420px;
+    width: 420px;
+    height: 870px;
+    max-height: 94vh;
+    margin: auto;
+    border-radius: 46px;
+    border: 14px solid #161922; /* iPhone premium bezel */
+    box-shadow: 0 35px 80px -20px rgba(0, 0, 0, 0.9), 0 0 0 2px rgba(255, 255, 255, 0.08);
+    position: relative;
+    background-color: var(--bg-color);
+    overflow: hidden;
+  }
+}
+
+/* Glassmorphic VR Prep Countdown Overlays */
+#countdown-overlay {
+  background: rgba(8, 10, 20, 0.96) !important;
+  backdrop-filter: blur(35px);
+  -webkit-backdrop-filter: blur(35px);
+}
+#countdown-overlay .premium-card {
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  backdrop-filter: none !important;
+}
+#countdown-overlay #countdown-number {
+  font-size: 6rem !important;
+  font-weight: 800 !important;
+  background: var(--primary-gradient) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  text-shadow: 0 0 30px rgba(99, 102, 241, 0.45);
+}
+

@@ -1,0 +1,103 @@
+<!-- Tight Rope Walk VR Game View -->
+<div id="view-root">
+  <div class="position-relative w-100 h-100" style="min-height: 100%; height: 100%; overflow: hidden; background: #F8FAFC;">
+    
+    <!-- 2D HUD Overlay (Visible on desktop/normal layout) -->
+    <div id="game-hud" class="vr-hud-overlay d-none">
+      <button id="btn-exit-game" class="btn btn-light border btn-circle shadow" style="pointer-events: auto; z-index: 100; background: white !important; width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center;">
+        <i data-lucide="arrow-left" style="width: 20px; height: 20px; color: var(--primary-color);"></i>
+      </button>
+    </div>
+
+    <!-- Ready / Countdown Overlay Screen -->
+    <div id="countdown-overlay" class="position-absolute top-0 start-0 w-100 h-100 d-flex flex-column align-items-center justify-content-center text-center text-white" style="z-index: 999; background: rgba(9, 13, 22, 0.95); padding: 2rem;">
+      <div class="premium-card bg-transparent border-0 d-flex flex-column align-items-center">
+        <div class="btn-circle mb-3" style="width: 72px; height: 72px; background: linear-gradient(135deg, #FBBF24 0%, #D97706 100%); animation: pulseGlow 2s infinite;">
+          <i data-lucide="activity" style="width: 36px; height: 36px; color: white;"></i>
+        </div>
+        <h3 class="fw-bold mb-2">Tight Rope Walk</h3>
+        <p class="text-muted small mb-4" style="max-width: 350px;">
+          Keep your head level. If you tilt too far left or right, you will lose balance and fall. 
+          <br><br>
+          <strong>Desktop Controls:</strong> Use <strong>A / D</strong> or <strong>Left / Right Arrow</strong> keys to simulate tilting your head.
+        </p>
+        
+        <!-- Big countdown number -->
+        <h1 class="display-1 fw-bold text-gradient mb-4" id="countdown-number">5</h1>
+        
+        <p class="text-muted small mb-0">Slowly look straight ahead to calibrate, then walk forward.</p>
+      </div>
+    </div>
+
+    <!-- A-Frame VR Environment -->
+    <a-scene embedded style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" vr-mode-ui="enabled: true">
+      
+      <!-- Central Camera rig with look controls and a ring gaze cursor -->
+      <a-entity id="camera-rig" position="0 10 0">
+        <a-entity id="main-camera" camera look-controls wasd-controls="enabled: false">
+          
+          <!-- Floating 3D Balance HUD (Attached to camera) -->
+          <a-entity id="balance-hud-3d" position="0 -0.4 -1.2">
+            <!-- Background bar -->
+            <a-plane width="0.8" height="0.04" color="#1e293b" opacity="0.8" material="shader: flat; transparent: true;"></a-plane>
+            <!-- Center green safety zone -->
+            <a-plane width="0.16" height="0.05" color="#10b981" position="0 0 0.005" material="shader: flat;"></a-plane>
+            <!-- Red boundary limits -->
+            <a-plane width="0.01" height="0.06" color="#ef4444" position="-0.38 0 0.01" material="shader: flat;"></a-plane>
+            <a-plane width="0.01" height="0.06" color="#ef4444" position="0.38 0 0.01" material="shader: flat;"></a-plane>
+            <!-- Balancing sphere cursor -->
+            <a-sphere id="balance-cursor-dot" radius="0.02" color="#3b82f6" position="0 0 0.02" material="shader: flat;"></a-sphere>
+          </a-entity>
+
+          <!-- Gaze Reticle -->
+          <a-entity id="gaze-cursor"
+                    cursor="fuse: true; fuseTimeout: 1000"
+                    position="0 0 -1"
+                    geometry="primitive: ring; radiusInner: 0.01; radiusOuter: 0.015"
+                    material="color: #cbd5e1; shader: flat; opacity: 0.5">
+          </a-entity>
+        </a-entity>
+      </a-entity>
+
+      <!-- VR Environment Objects -->
+      <!-- High Altitude Sky -->
+      <a-sky color="#030712"></a-sky>
+      
+      <!-- Stars/Cloud Particles -->
+      <a-entity id="stars-container"></a-entity>
+
+      <!-- The Tightrope (Orange wire stretching down the Z axis) -->
+      <a-cylinder id="tightrope" position="0 9.8 -100" rotation="90 0 0" radius="0.04" height="250" color="#f59e0b" material="roughness: 0.8; metalness: 0.2;"></a-cylinder>
+      
+      <!-- Ground plane (Very far below to emphasize height) -->
+      <a-plane position="0 0 0" rotation="-90 0 0" width="1000" height="1000" color="#020617" material="roughness: 1.0;"></a-plane>
+
+      <!-- Surrounding Skyscrapers (3D boxes to enhance parallax/height sensation) -->
+      <a-entity id="city-scenery">
+        <!-- Building 1 (Start platform) -->
+        <a-box position="0 4.5 5" width="4" height="10" depth="4" color="#1e293b" material="roughness: 0.9;"></a-box>
+        <!-- Building 2 (End platform far away) -->
+        <a-box position="0 4.5 -205" width="4" height="10" depth="4" color="#1e293b" material="roughness: 0.9;"></a-box>
+        
+        <!-- Left Side Buildings -->
+        <a-box position="-10 3 -20" width="6" height="8" depth="6" color="#0f172a"></a-box>
+        <a-box position="-15 5 -60" width="8" height="12" depth="8" color="#111827"></a-box>
+        <a-box position="-12 2 -110" width="5" height="7" depth="5" color="#0f172a"></a-box>
+        <a-box position="-16 6 -150" width="7" height="14" depth="7" color="#111827"></a-box>
+        
+        <!-- Right Side Buildings -->
+        <a-box position="10 4 -40" width="5" height="10" depth="5" color="#111827"></a-box>
+        <a-box position="14 2 -90" width="6" height="6" depth="6" color="#0f172a"></a-box>
+        <a-box position="11 5 -130" width="5" height="11" depth="5" color="#111827"></a-box>
+        <a-box position="15 3 -180" width="7" height="8" depth="7" color="#0f172a"></a-box>
+      </a-entity>
+
+      <!-- Ambient Lighting -->
+      <a-light type="ambient" color="#1e293b" intensity="0.6"></a-light>
+      <!-- Sunset glow directional light -->
+      <a-light type="directional" color="#f59e0b" intensity="0.5" position="5 15 10"></a-light>
+      <a-light type="directional" color="#3b82f6" intensity="0.4" position="-5 15 -10"></a-light>
+      
+    </a-scene>
+  </div>
+</div>

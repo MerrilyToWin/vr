@@ -1,0 +1,178 @@
+<!-- Session Summary View -->
+<div id="view-root">
+  <div class="view-content fade-in py-3 text-center position-relative">
+    <!-- Back Button -->
+    <div class="position-absolute" style="top: 0.5rem; left: 0.5rem; z-index: 100;">
+      <a href="#dashboard" class="btn btn-light btn-circle border shadow-soft" style="width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center;">
+        <i data-lucide="arrow-left" style="width: 20px; height: 20px; color: var(--primary-color);"></i>
+      </a>
+    </div>
+    
+    <!-- Canvas for Confetti Overlay -->
+    <canvas id="confetti-canvas" class="position-absolute top-0 start-0 w-100 h-100" style="pointer-events: none; z-index: 1;"></canvas>
+
+    <div class="relative-content" style="position: relative; z-index: 2; width: 100%;">
+      <!-- Title Section -->
+      <div class="mb-4 mt-3">
+        <span class="badge bg-primary text-white mb-2" style="border-radius: 10px; font-size: 0.72rem; padding: 0.35rem 0.75rem; letter-spacing: 0.3px; text-transform: uppercase;">Session Completed</span>
+        <h2 class="fw-bold mb-1" style="letter-spacing: -0.5px;">Workout Summary</h2>
+        <p class="text-muted small px-3">Fantastic work today! Here are your training details.</p>
+      </div>
+
+      <!-- Rating Indicator / Progress Level Card -->
+      <div class="premium-card p-3 mb-4 shadow-medium" style="background: rgba(16, 185, 129, 0.05); border-color: rgba(16, 185, 129, 0.2);">
+        <p class="text-muted small fw-bold mb-1" style="font-size: 0.65rem; letter-spacing: 0.5px; text-transform: uppercase;">Athletic Performance Level</p>
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h3 class="fw-bold mb-0 text-success" id="summary-rating-text" style="font-size: 1.15rem; letter-spacing: -0.2px;">Good</h3>
+          <span class="badge-accent" style="font-size: 0.68rem; font-weight: 700; background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.2);">Fit Tier</span>
+        </div>
+        <!-- Level progress bar fill -->
+        <div class="progress-bar-container">
+          <div class="progress-bar-fill" id="summary-level-bar" style="width: 70%; background: linear-gradient(90deg, #10B981 0%, #34D399 100%);"></div>
+        </div>
+        <p class="text-muted small mb-0 mt-2 text-start" id="summary-rating-subtext" style="font-size: 0.72rem; line-height: 1.35;">You crushed your training metrics!</p>
+      </div>
+
+      <!-- Main Cumulative Stats Card -->
+      <div class="premium-card p-3 mb-4 shadow-soft" style="border-radius: 22px;">
+        <div class="row text-center">
+          <div class="col-4 border-end" style="border-color: rgba(255,255,255,0.05) !important;">
+            <h4 class="fw-bold mb-0 text-primary" id="summary-score" style="font-size: 1.25rem; letter-spacing: -0.5px;">0</h4>
+            <p class="text-muted mb-0" style="font-size: 0.65rem; font-weight: 500; text-transform: uppercase;">Total Score</p>
+          </div>
+          <div class="col-4 border-end" style="border-color: rgba(255,255,255,0.05) !important;">
+            <h4 class="fw-bold mb-0 text-danger" id="summary-calories" style="font-size: 1.25rem; letter-spacing: -0.5px;">0.0</h4>
+            <p class="text-muted mb-0" style="font-size: 0.65rem; font-weight: 500; text-transform: uppercase;">Kcal Burned</p>
+          </div>
+          <div class="col-4">
+            <h4 class="fw-bold mb-0 text-success" id="summary-time" style="font-size: 1.25rem; letter-spacing: -0.5px;">00:00</h4>
+            <p class="text-muted mb-0" style="font-size: 0.65rem; font-weight: 500; text-transform: uppercase;">Duration</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chart.js Analysis Card -->
+      <div class="premium-card p-3 mb-4 shadow-medium" style="border-radius: 24px;">
+        <h6 class="fw-bold mb-3 text-start" style="font-size: 0.9rem;">Activity Balance</h6>
+        <div style="height: 220px; position: relative;">
+          <canvas id="summary-chart"></canvas>
+        </div>
+      </div>
+
+      <!-- Details break down -->
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <h6 class="fw-bold mb-0" style="font-size: 0.95rem; letter-spacing: -0.2px;">Workout Details</h6>
+      </div>
+      
+      <div class="d-flex flex-column gap-3 mb-4">
+        
+        <!-- Catch Ball Stats Card -->
+        <div class="premium-card card-game-blue p-3 text-start" style="border-radius: 20px;">
+          <div class="d-flex align-items-center gap-2 mb-3">
+            <div class="btn-circle" style="width: 36px; height: 36px; border-radius: 10px; background: rgba(99, 102, 241, 0.1) !important; border-color: rgba(99, 102, 241, 0.15) !important;">
+              <i data-lucide="target" style="width: 18px; height: 18px; color: var(--primary-color);"></i>
+            </div>
+            <h6 class="fw-bold mb-0" style="font-size: 0.85rem;">Catch the Ball</h6>
+          </div>
+          <div class="row text-center g-2 text-muted small">
+            <div class="col-4 border-end" style="border-color: rgba(255,255,255,0.05) !important;">
+              <p class="mb-0 fw-bold text-white" id="summary-cb-caught" style="font-size: 0.9rem;">0</p>
+              <p class="mb-0 fs-8" style="font-size: 0.65rem;">Caught</p>
+            </div>
+            <div class="col-4 border-end" style="border-color: rgba(255,255,255,0.05) !important;">
+              <p class="mb-0 fw-bold text-white" id="summary-cb-missed" style="font-size: 0.9rem;">0</p>
+              <p class="mb-0 fs-8" style="font-size: 0.65rem;">Missed</p>
+            </div>
+            <div class="col-4">
+              <p class="mb-0 fw-bold text-white" style="font-size: 0.9rem;"><span id="summary-cb-acc">0</span>%</p>
+              <p class="mb-0 fs-8" style="font-size: 0.65rem;">Accuracy</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Running Stats Card -->
+        <div class="premium-card card-game-green p-3 text-start" style="border-radius: 20px;">
+          <div class="d-flex align-items-center gap-2 mb-3">
+            <div class="btn-circle" style="width: 36px; height: 36px; border-radius: 10px; background: rgba(16, 185, 129, 0.1) !important; border-color: rgba(16, 185, 129, 0.15) !important;">
+              <i data-lucide="footprints" style="width: 18px; height: 18px; color: var(--accent-green) !important;"></i>
+            </div>
+            <h6 class="fw-bold mb-0" style="font-size: 0.85rem;">Running Challenge</h6>
+          </div>
+          <div class="row text-center g-2 text-muted small">
+            <div class="col-4 border-end" style="border-color: rgba(255,255,255,0.05) !important;">
+              <p class="mb-0 fw-bold text-white" id="summary-run-steps" style="font-size: 0.9rem;">0</p>
+              <p class="mb-0 fs-8" style="font-size: 0.65rem;">Steps</p>
+            </div>
+            <div class="col-4 border-end" style="border-color: rgba(255,255,255,0.05) !important;">
+              <p class="mb-0 fw-bold text-white" style="font-size: 0.9rem;"><span id="summary-run-dist">0</span>m</p>
+              <p class="mb-0 fs-8" style="font-size: 0.65rem;">Distance</p>
+            </div>
+            <div class="col-4">
+              <p class="mb-0 fw-bold text-white" style="font-size: 0.9rem;"><span id="summary-run-speed">0.0</span> <span class="fs-8" style="font-size: 0.65rem;">km/h</span></p>
+              <p class="mb-0 fs-8" style="font-size: 0.65rem;">Max Speed</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tight Rope Walk Stats Card -->
+        <div class="premium-card card-game-gold p-3 text-start" style="border-radius: 20px;">
+          <div class="d-flex align-items-center gap-2 mb-3">
+            <div class="btn-circle" style="width: 36px; height: 36px; border-radius: 10px; background: rgba(245, 158, 11, 0.1) !important; border-color: rgba(245, 158, 11, 0.15) !important;">
+              <i data-lucide="activity" style="width: 18px; height: 18px; color: #f59e0b !important;"></i>
+            </div>
+            <h6 class="fw-bold mb-0" style="font-size: 0.85rem;">Tight Rope Walk</h6>
+          </div>
+          <div class="row text-center g-2 text-muted small">
+            <div class="col-4 border-end" style="border-color: rgba(255,255,255,0.05) !important;">
+              <p class="mb-0 fw-bold text-white" style="font-size: 0.9rem;"><span id="summary-bal-dist">0</span>m</p>
+              <p class="mb-0 fs-8" style="font-size: 0.65rem;">Distance</p>
+            </div>
+            <div class="col-4 border-end" style="border-color: rgba(255,255,255,0.05) !important;">
+              <p class="mb-0 fw-bold text-white" style="font-size: 0.9rem;"><span id="summary-bal-time">0</span>s</p>
+              <p class="mb-0 fs-8" style="font-size: 0.65rem;">Survived</p>
+            </div>
+            <div class="col-4">
+              <p class="mb-0 fw-bold text-white" style="font-size: 0.9rem;"><span id="summary-bal-dev">0</span>%</p>
+              <p class="mb-0 fs-8" style="font-size: 0.65rem;">Instability</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ruler Drop Stats Card -->
+        <div class="premium-card p-3 text-start" style="border-radius: 20px; border-color: rgba(6, 182, 212, 0.15); box-shadow: 0 8px 20px -10px rgba(6, 182, 212, 0.2);">
+          <div class="d-flex align-items-center gap-2 mb-3">
+            <div class="btn-circle" style="width: 36px; height: 36px; border-radius: 10px; background: rgba(6, 182, 212, 0.1) !important; border-color: rgba(6, 182, 212, 0.15) !important;">
+              <i data-lucide="zap" style="width: 18px; height: 18px; color: #06B6D4 !important;"></i>
+            </div>
+            <h6 class="fw-bold mb-0" style="font-size: 0.85rem;">Ruler Drop Challenge</h6>
+          </div>
+          <div class="row text-center g-2 text-muted small">
+            <div class="col-4 border-end" style="border-color: rgba(255,255,255,0.05) !important;">
+              <p class="mb-0 fw-bold text-white" style="font-size: 0.9rem;"><span id="summary-rd-score">0</span></p>
+              <p class="mb-0 fs-8" style="font-size: 0.65rem;">Score</p>
+            </div>
+            <div class="col-4 border-end" style="border-color: rgba(255,255,255,0.05) !important;">
+              <p class="mb-0 fw-bold text-white" style="font-size: 0.9rem;"><span id="summary-rd-reaction">0</span>ms</p>
+              <p class="mb-0 fs-8" style="font-size: 0.65rem;">Reaction</p>
+            </div>
+            <div class="col-4">
+              <p class="mb-0 fw-bold text-white" style="font-size: 0.9rem;"><span id="summary-rd-dist">0</span>cm</p>
+              <p class="mb-0 fs-8" style="font-size: 0.65rem;">Avg Catch</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action buttons -->
+      <div class="d-flex flex-column gap-2 mb-3">
+        <button id="btn-restart-session" class="btn-premium w-100 py-3" style="border-radius: 18px;">
+          <i data-lucide="refresh-cw"></i> Reset and Train Again
+        </button>
+        <button id="btn-exit-session" class="btn-outline-premium w-100 py-3" style="border-radius: 18px;">
+          <i data-lucide="log-out"></i> Finish & Log Out
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,59 @@
+<!-- Settings View -->
+<div id="view-root">
+  <div class="view-content fade-in py-4 position-relative">
+    <!-- Back Button -->
+    <div class="position-absolute" style="top: 0.5rem; left: 0.5rem; z-index: 100;">
+      <a href="#dashboard" class="btn btn-light btn-circle border shadow-soft" style="width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center;">
+        <i data-lucide="arrow-left" style="width: 20px; height: 20px; color: var(--primary-color);"></i>
+      </a>
+    </div>
+
+    <!-- Header -->
+    <div class="text-center mb-4 mt-3">
+      <div class="btn-circle bg-light text-primary mb-2 mx-auto" style="width: 50px; height: 50px; background: rgba(99, 102, 241, 0.1) !important; border: 1px solid rgba(99, 102, 241, 0.15) !important;">
+        <i data-lucide="sliders-horizontal" style="color: var(--primary-color); width: 22px; height: 22px;"></i>
+      </div>
+      <h3 class="fw-bold mb-1" style="letter-spacing: -0.5px;">Application Settings</h3>
+      <p class="text-muted small">Configure your SYNOVA parameters.</p>
+    </div>
+
+    <!-- Configuration Options Card -->
+    <div class="premium-card shadow-medium mb-4" data-aos="fade-up">
+      <!-- Mute Switch -->
+      <div class="d-flex justify-content-between align-items-center mb-4 pb-3" style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+        <div>
+          <h6 class="fw-bold mb-0" style="font-size: 0.9rem;">Mute Sounds</h6>
+          <p class="text-muted mb-0" style="font-size: 0.72rem;">Silence synthesizers and music</p>
+        </div>
+        <div class="form-check form-switch">
+          <input class="form-check-input" type="checkbox" id="settings-mute" style="width: 48px; height: 24px; cursor: pointer;">
+        </div>
+      </div>
+
+      <!-- Difficulty Level Dropdown -->
+      <div class="mb-4 pb-3" style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+        <label for="settings-difficulty" class="form-label fw-bold mb-1" style="font-size: 0.9rem;">Workout Challenge Difficulty</label>
+        <p class="text-muted mb-3" style="font-size: 0.72rem;">Modifies ball spawn intervals and speed requirements</p>
+        <select id="settings-difficulty" class="premium-input" style="height: 52px; padding: 0.5rem 1.1rem; cursor: pointer;">
+          <option value="easy">Easy (Slower Spawning & Pacing)</option>
+          <option value="medium">Medium (Balanced Fit Standard)</option>
+          <option value="hard">Hard (Rapid Target Cardio)</option>
+        </select>
+      </div>
+
+      <!-- Hard Reset Button -->
+      <div>
+        <h6 class="fw-bold mb-1 text-danger" style="font-size: 0.9rem;">Reset Workout Session</h6>
+        <p class="text-muted mb-3" style="font-size: 0.72rem;">Instantly erases all session progress and profile data from memory.</p>
+        <button id="settings-reset" class="btn btn-outline-danger w-100 py-3" style="border-radius: var(--btn-radius); font-weight: 700; font-size: 0.9rem;">
+          <i data-lucide="trash-2" style="width: 18px; height: 18px; margin-right: 4px;"></i> Wipe Current Session
+        </button>
+      </div>
+    </div>
+
+    <!-- Back Button -->
+    <button id="settings-back" class="btn-premium w-100 py-3">
+      <i data-lucide="arrow-left"></i> Return to Dashboard
+    </button>
+  </div>
+</div>
