@@ -229,3 +229,217 @@ body {
   padding: 0.5rem;
   cursor: pointer;
 }
+
+/* ================================================================
+   PATIENT ANALYTICS SYSTEM — Premium UI Components
+   ================================================================ */
+
+/* Patient Selector Dropdown in Header */
+#patient-selector {
+  font-family: var(--font-family);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  outline: none;
+  min-width: 165px;
+  transition: var(--transition-smooth);
+}
+
+#patient-selector:focus {
+  outline: none;
+}
+
+[data-theme="dark"] #patient-selector {
+  color: #93C5FD;
+}
+
+/* Patient Banner Header Card */
+.patient-banner-card {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border-radius: var(--card-radius);
+  box-shadow: 0 20px 60px -20px rgba(37, 99, 235, 0.35);
+  overflow: hidden;
+  position: relative;
+}
+
+.patient-banner-card::before {
+  content: '';
+  position: absolute;
+  top: -40%;
+  right: -10%;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* Patient avatar circle — colour tinted by risk level */
+#patient-avatar-text {
+  font-family: var(--font-family);
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  box-shadow: 0 4px 20px rgba(37, 99, 235, 0.4);
+  transition: var(--transition-smooth);
+}
+
+/* Clinical Risk Badges */
+.risk-badge-optimal {
+  background: rgba(34, 197, 94, 0.2) !important;
+  color: #16a34a !important;
+  border: 1px solid rgba(34, 197, 94, 0.4);
+}
+.risk-badge-moderate {
+  background: rgba(251, 191, 36, 0.2) !important;
+  color: #d97706 !important;
+  border: 1px solid rgba(251, 191, 36, 0.4);
+}
+.risk-badge-high {
+  background: rgba(239, 68, 68, 0.2) !important;
+  color: #dc2626 !important;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+}
+
+/* Clinical KPI Score Cards — highlight colours */
+.kpi-card-primary   { border-left: 3px solid var(--primary-color); }
+.kpi-card-success   { border-left: 3px solid var(--accent-green); }
+.kpi-card-warning   { border-left: 3px solid #F59E0B; }
+.kpi-card-info      { border-left: 3px solid #06B6D4; }
+
+/* Radar Chart Container — subtle animated glow ring */
+#chart-patient-radar {
+  filter: drop-shadow(0 0 8px rgba(37, 99, 235, 0.2));
+}
+
+/* Trend Chart fade-in on patient switch */
+#chart-patient-trend {
+  transition: opacity 0.35s ease;
+}
+
+/* Patient History Log Table */
+#patient-history-table thead th {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 0.75rem 1rem;
+  background: rgba(0, 0, 0, 0.02);
+}
+
+[data-theme="dark"] #patient-history-table thead th {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+#patient-history-table tbody tr {
+  transition: background 0.15s ease;
+}
+
+#patient-history-table tbody tr:hover {
+  background: rgba(37, 99, 235, 0.04);
+}
+
+/* Row-level clinical risk flag colours */
+.history-row-optimal td:last-child { color: #16a34a; font-weight: 600; }
+.history-row-moderate td:last-child { color: #d97706; font-weight: 600; }
+.history-row-high td:last-child { color: #dc2626; font-weight: 600; }
+
+/* No-data placeholder state */
+.patient-empty-state {
+  padding: 3rem 1rem;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.patient-empty-state svg,
+.patient-empty-state [data-lucide] {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 1rem;
+  opacity: 0.35;
+}
+
+/* Export Report Button */
+#btn-export-patient-report {
+  font-family: var(--font-family);
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.45rem 1.1rem;
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--primary-color);
+  border: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: var(--transition-smooth);
+}
+
+#btn-export-patient-report:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  background: #fff;
+}
+
+/* Patient Switcher loading spinner */
+.patient-loading-spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(37, 99, 235, 0.25);
+  border-top-color: var(--primary-color);
+  border-radius: 50%;
+  animation: spinLoader 0.65s linear infinite;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+@keyframes spinLoader {
+  to { transform: rotate(360deg); }
+}
+
+/* Session count badge in history header */
+#patient-session-count-badge {
+  font-family: var(--font-family);
+  font-size: 0.72rem;
+  font-weight: 700;
+  border-radius: 20px;
+  padding: 0.3rem 0.75rem;
+}
+
+/* Dark mode overrides for patient analytics */
+[data-theme="dark"] .patient-banner-card {
+  box-shadow: 0 20px 60px -20px rgba(37, 99, 235, 0.15);
+}
+
+[data-theme="dark"] #btn-export-patient-report {
+  background: rgba(255, 255, 255, 0.1);
+  color: #93C5FD;
+}
+
+[data-theme="dark"] #btn-export-patient-report:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+[data-theme="dark"] #patient-history-table tbody tr:hover {
+  background: rgba(37, 99, 235, 0.08);
+}
+
+/* Patient selector wrapper in header */
+.patient-selector-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 30px;
+  padding: 0.35rem 0.9rem;
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(10px);
+  transition: var(--transition-smooth);
+}
+
+.patient-selector-wrapper:hover {
+  box-shadow: var(--shadow-medium);
+  border-color: rgba(37, 99, 235, 0.2);
+}
