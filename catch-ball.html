@@ -68,7 +68,7 @@
       <a-plane id="ground" position="0 0 0" rotation="-90 0 0" width="100" height="100" color="#5c8f62" material="roughness: 1; metalness: 0"></a-plane>
       
       <!-- Grid Floor on top of ground for depth perception -->
-      <a-grid id="floor" static-body geometry="primitive: plane; width: 100; height: 100" rotation="-90 0 0" material="color: #ffffff; wireframe: true; opacity: 0.25"></a-grid>
+      <a-plane id="floor" position="0 0.01 0" rotation="-90 0 0" width="100" height="100" material="color: #ffffff; wireframe: true; opacity: 0.25; transparent: true"></a-plane>
       
       <!-- Bright Outdoor Lighting -->
       <a-light type="ambient" color="#bde0fe" intensity="0.6"></a-light>

@@ -278,6 +278,17 @@ function startCountdown(onComplete) {
 function startGameLoop() {
   gameActive = true;
   updateHUD();
+  
+  // Align containers with camera's initial look direction
+  const camera = document.getElementById('main-camera');
+  const targetContainer = document.getElementById('target-container');
+  const cloudsContainer = document.getElementById('clouds-container');
+  if (camera) {
+    const rot = camera.getAttribute('rotation') || { y: 0 };
+    if (targetContainer) targetContainer.setAttribute('rotation', `0 ${rot.y} 0`);
+    if (cloudsContainer) cloudsContainer.setAttribute('rotation', `0 ${rot.y} 0`);
+  }
+  
   initClouds();
   
   // Game countdown timer
