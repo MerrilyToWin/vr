@@ -33,8 +33,8 @@
     </div>
 
     <!-- A-Frame VR Environment -->
-    <!-- We embed the scene and style it to cover the entire page -->
-    <a-scene embedded style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" vr-mode-ui="enabled: false" webxr="requiredFeatures: local" device-orientation-permission-ui="enabled: false">
+    <!-- We remove embedded to ensure A-Frame applies proper fullscreen dimensions and aspect ratio for stereoscopic VR -->
+    <a-scene vr-mode-ui="enabled: false" webxr="requiredFeatures: local" device-orientation-permission-ui="enabled: false">
       
       <!-- Asset Management -->
       <a-assets>
