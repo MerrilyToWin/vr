@@ -371,10 +371,12 @@ function spawnBall() {
   }
   
   // Set dimensions and position
-  // Spawn in a cone directly in front of camera (Z: -3.5 to -5.5, X: -1.6 to 1.6, Y: 1.0 to 2.2)
-  const x = (Math.random() * 3.2 - 1.6).toFixed(2); // -1.6 to 1.6
-  const y = (Math.random() * 1.2 + 1.0).toFixed(2); // 1.0 to 2.2
-  const z = -(Math.random() * 2.0 + 3.5).toFixed(2); // -3.5 to -5.5
+  // Spawn in a 360-degree radius around the player to encourage looking around
+  const angle = Math.random() * Math.PI * 2;
+  const distance = Math.random() * 2.0 + 3.5; // 3.5 to 5.5 meters away
+  const x = (Math.cos(angle) * distance).toFixed(2);
+  const y = (Math.random() * 2.0 + 0.5).toFixed(2); // 0.5 to 2.5 meters high
+  const z = (Math.sin(angle) * distance).toFixed(2);
   
   ball.setAttribute('id', ballId);
   ball.setAttribute('position', `${x} ${y} ${z}`);
