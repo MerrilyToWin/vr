@@ -268,21 +268,33 @@ function handleDeviceOrientation(data) {
   sensorTilt = sensorTilt * 0.8 + targetSensorTilt * 0.2;
 }
 
+let slowMovingAverage = 0;
+let fastMovingAverage = 0;
+
 function handleDeviceMotion(data) {
   if (!gameActive) return;
 
   const motionMagnitude = data.movementScore || data.magnitude || 0;
-  filteredMotion = MOTION_FILTER_ALPHA * motionMagnitude + (1 - MOTION_FILTER_ALPHA) * filteredMotion;
+  
+  if (slowMovingAverage === 0) slowMovingAverage = motionMagnitude;
+  if (fastMovingAverage === 0) fastMovingAverage = motionMagnitude;
+  
+  slowMovingAverage = 0.95 * slowMovingAverage + 0.05 * motionMagnitude;
+  fastMovingAverage = 0.60 * fastMovingAverage + 0.40 * motionMagnitude;
+  
+  const dynamicMotion = Math.abs(fastMovingAverage - slowMovingAverage);
+  filteredMotion = 0.4 * dynamicMotion + 0.6 * filteredMotion;
 
-  const threshold = data.hasLinearAccel ? MOTION_THRESHOLD : 12;
+  const threshold = 0.8; 
   const now = Date.now();
+  
   if (filteredMotion > threshold) {
     if (!isMotionPeak && (now - lastMotionTime) > MOTION_DEBOUNCE_TIME) {
       pendingForwardDistance += strideDistance;
       lastMotionTime = now;
       isMotionPeak = true;
     }
-  } else if (filteredMotion < threshold * 0.65) {
+  } else if (filteredMotion < threshold * 0.6) {
     isMotionPeak = false;
   }
 }
