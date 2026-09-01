@@ -145,7 +145,7 @@ export const vrHelper = {
     }
   },
 
-  requireGameMode({ onReady, sceneEl = document.querySelector('a-scene') } = {}) {
+  requireGameMode({ onReady, sceneEl = document.querySelector('a-scene'), skipVR = false } = {}) {
     let active = true;
     let ready = false;
     const mobileOnlyStrict = this.isMobileDevice();
@@ -166,7 +166,7 @@ export const vrHelper = {
         button = document.createElement('button');
         button.id = 'btn-enter-vr-mode';
         button.className = 'btn-premium mt-3';
-        button.innerText = 'Enter VR Mode';
+        button.innerText = 'Start Game';
         button.addEventListener('click', tryStart);
         overlay.appendChild(button);
       }
@@ -188,7 +188,7 @@ export const vrHelper = {
       if (mobileOnlyStrict && !this.isLandscape()) {
         setOverlay(
           'Rotate to Landscape',
-          'SYNOVA games run only in landscape VR mode on mobile. Rotate your phone sideways before starting.'
+          'SYNOVA games run best in landscape mode on mobile. Rotate your phone sideways before starting.'
         );
         return;
       }
@@ -198,24 +198,27 @@ export const vrHelper = {
       if (mobileOnlyStrict && !sensorsApproved) {
         setOverlay(
           'Allow Motion Sensors',
-          'SYNOVA needs phone motion and orientation access before the VR game can start.',
+          'SYNOVA needs phone motion and orientation access before the game can start.',
           true
         );
         return;
       }
 
       await this.enterLandscapeFullscreen();
-      const vrStarted = await this.enterVRScene(sceneEl);
+      
+      if (!skipVR) {
+        const vrStarted = await this.enterVRScene(sceneEl);
 
-      if (!active || ready) return;
+        if (!active || ready) return;
 
-      if (mobileOnlyStrict && !vrStarted) {
-        setOverlay(
-          'Enter VR Mode',
-          'SYNOVA needs VR mode active before the game can start. Tap the button after your phone is in landscape.',
-          true
-        );
-        return;
+        if (mobileOnlyStrict && !vrStarted) {
+          setOverlay(
+            'Enter VR Mode',
+            'SYNOVA needs VR mode active before the game can start. Tap the button after your phone is in landscape.',
+            true
+          );
+          return;
+        }
       }
 
       ready = true;

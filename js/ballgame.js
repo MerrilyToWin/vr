@@ -193,9 +193,10 @@ export function initBallGame() {
     broadcastSensorStream();
   });
 
-  // Countdown starts only after mobile landscape and VR mode are ready.
+  // Countdown starts only after mobile landscape and permissions are ready (VR skipped)
   cleanupGameMode = vrHelper.requireGameMode({
     sceneEl,
+    skipVR: true,
     onReady: () => {
       startCountdown(() => {
         startGameLoop();
