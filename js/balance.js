@@ -395,10 +395,10 @@ function tick() {
   }
 
   // 6. Camera Tilt rotation Z representation (Roll)
-  const camera = document.getElementById('main-camera');
-  if (camera) {
-    const rot = camera.getAttribute('rotation') || { x: 0, y: 0, z: 0 };
-    camera.setAttribute('rotation', `${rot.x} ${rot.y} ${tilt}`);
+  const cameraRigTick = document.getElementById('camera-rig');
+  if (cameraRigTick) {
+    const rot = cameraRigTick.getAttribute('rotation') || { x: 0, y: 0, z: 0 };
+    cameraRigTick.setAttribute('rotation', `${rot.x} ${rot.y} ${tilt}`);
   }
 
   // 7. Dynamic Wind Visualizer
@@ -583,7 +583,7 @@ function endGame(forced = false) {
     
     window.location.hash = '#summary';
   } else {
-    window.location.hash = '#dashboard';
+    window.location.hash = '#summary';
   }
 }
 

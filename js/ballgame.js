@@ -608,8 +608,8 @@ function endGame(forced = false) {
     // Go to summary
     window.location.hash = '#summary';
   } else {
-    // If exited, go back to dashboard without saving incomplete results
-    window.location.hash = '#dashboard';
+    // If exited, go back to summary
+    window.location.hash = '#summary';
   }
 }
 

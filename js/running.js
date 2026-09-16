@@ -287,28 +287,14 @@ function tick() {
   });
 
   // 3. Real-Time Head Bobbing (Sinusoidal camera bobbing based on speed)
-  const camera = document.getElementById('main-camera');
-  if (camera) {
+  const cameraRig = document.getElementById('camera-rig');
+  if (cameraRig) {
+    let posY = 1.6;
     let rotX = 0;
     let rotY = 0;
     let rotZ = 0;
-    let posY = 1.6;
 
-    const rawRot = camera.getAttribute('rotation');
-    if (typeof rawRot === 'object' && rawRot !== null) {
-      rotX = Number.isFinite(rawRot.x) ? rawRot.x : 0;
-      rotY = Number.isFinite(rawRot.y) ? rawRot.y : 0;
-      rotZ = Number.isFinite(rawRot.z) ? rawRot.z : 0;
-    } else if (typeof rawRot === 'string') {
-      const parts = rawRot.trim().split(/\s+/).map(Number);
-      if (parts.length >= 3) {
-        rotX = Number.isFinite(parts[0]) ? parts[0] : 0;
-        rotY = Number.isFinite(parts[1]) ? parts[1] : 0;
-        rotZ = Number.isFinite(parts[2]) ? parts[2] : 0;
-      }
-    }
-
-    const rawPos = camera.getAttribute('position');
+    const rawPos = cameraRig.getAttribute('position');
     if (typeof rawPos === 'object' && rawPos !== null) {
       posY = Number.isFinite(rawPos.y) ? rawPos.y : 1.6;
     } else if (typeof rawPos === 'string') {
@@ -321,22 +307,15 @@ function tick() {
       bobTime += dt * frequency;
 
       const bobY = Math.sin(bobTime) * 0.05 * (currentSpeed / 12);
-      const bobZ = Math.cos(bobTime * 0.5) * 1.2 * (currentSpeed / 12);
-      
+      // Removed bobZ (roll) rotation to avoid messing with VR immersion heavily
       const safeY = Number.isFinite(bobY) ? 1.6 + bobY : 1.6;
-      const safeZ = Number.isFinite(bobZ) ? bobZ : 0;
 
-      camera.setAttribute('position', `0 ${safeY.toFixed(3)} 0`);
-      camera.setAttribute('rotation', `${rotX.toFixed(2)} ${rotY.toFixed(2)} ${safeZ.toFixed(2)}`);
+      cameraRig.setAttribute('position', `0 ${safeY.toFixed(3)} 0`);
     } else {
       const newY = posY * 0.9 + 1.6 * 0.1;
-      const newZRoll = rotZ * 0.9;
-      
       const safeY = Number.isFinite(newY) ? newY : 1.6;
-      const safeZ = Number.isFinite(newZRoll) ? newZRoll : 0;
 
-      camera.setAttribute('position', `0 ${safeY.toFixed(3)} 0`);
-      camera.setAttribute('rotation', `${rotX.toFixed(2)} ${rotY.toFixed(2)} ${safeZ.toFixed(2)}`);
+      cameraRig.setAttribute('position', `0 ${safeY.toFixed(3)} 0`);
     }
   }
 
@@ -469,7 +448,7 @@ function endChallenge(forced = false) {
     
     window.location.hash = '#summary';
   } else {
-    window.location.hash = '#dashboard';
+    window.location.hash = '#summary';
   }
 }
 
