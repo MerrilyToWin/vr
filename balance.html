@@ -30,7 +30,8 @@
     </div>
 
     <!-- A-Frame VR Environment -->
-    <a-scene embedded style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" vr-mode-ui="enabled: true">
+    <!-- We remove embedded to ensure A-Frame applies proper fullscreen dimensions and aspect ratio for stereoscopic VR -->
+    <a-scene vr-mode-ui="enabled: true">
       
       <!-- Central Camera rig with look controls and a ring gaze cursor -->
       <a-entity id="camera-rig" position="0 10 0">

@@ -30,7 +30,8 @@
     </div>
 
     <!-- A-Frame VR Environment -->
-    <a-scene embedded style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" vr-mode-ui="enabled: false" webxr="requiredFeatures: local" device-orientation-permission-ui="enabled: false">
+    <!-- We remove embedded to ensure A-Frame applies proper fullscreen dimensions and aspect ratio for stereoscopic VR -->
+    <a-scene vr-mode-ui="enabled: false" webxr="requiredFeatures: local" device-orientation-permission-ui="enabled: false">
       
       <!-- Central Camera rig with look controls -->
       <a-entity id="camera-rig" position="0 1.6 0">
