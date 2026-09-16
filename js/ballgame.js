@@ -592,7 +592,7 @@ function endGame(forced = false) {
     
     // Save results to appState
     const accuracy = fitnessMath.calcAccuracy(caughtCount, totalBallsSpawned);
-    window.appState.gameResults.catchBall.push({
+    const result = {
       score,
       ballsCaught: caughtCount,
       ballsMissed: missedCount,
@@ -602,14 +602,16 @@ function endGame(forced = false) {
       maxCombo,
       difficultyLevel: spawnDifficultyLevel,
       date: new Date()
-    });
+    };
+    window.appState.gameResults.catchBall.push(result);
+    window.appState.lastGameResult = { gameType: 'catchBall', ...result };
     saveHistoryToLocalStorage();
     
     // Go to summary
     window.location.hash = '#summary';
   } else {
-    // If exited, go back to summary
-    window.location.hash = '#summary';
+    window.appState.lastGameResult = null;
+    window.location.hash = '#dashboard';
   }
 }
 

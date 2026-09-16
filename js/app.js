@@ -13,10 +13,11 @@ import { localDB } from './db.js';
 // Setup global state in RAM
 window.appState = {
   user: null, // { name, age, gender, height, weight }
+  lastGameResult: null,
   session: {
     active: false,
     startTime: null,
-    duration: 0, // seconds
+    duration: 0, // completed game seconds
     timerInterval: null,
     totalCalories: 0,
     totalScore: 0
@@ -413,7 +414,7 @@ function broadcastTick() {
       user: window.appState.user,
       session: {
         active: window.appState.session.active,
-        duration: window.appState.session.duration,
+        duration: getTotalGameDuration(),
         totalScore: window.appState.session.totalScore,
         totalCalories: window.appState.session.totalCalories,
         activeGame: window.location.hash
@@ -443,15 +444,15 @@ function startGlobalSession() {
     user: window.appState.user
   });
   
-  window.appState.session.timerInterval = setInterval(() => {
-    if (window.appState.session.active) {
-      window.appState.session.duration++;
-      broadcastTick();
-    }
-  }, 1000);
-  
   // Play soft background theme
   soundManager.startBGM();
+}
+
+export function getTotalGameDuration() {
+  const results = window.appState.gameResults || {};
+  return ['catchBall', 'running', 'balance', 'rulerDrop']
+    .flatMap((gameType) => results[gameType] || [])
+    .reduce((total, result) => total + (Number(result.duration) || 0), 0);
 }
 
 // Save game results to localStorage and sync with MongoDB

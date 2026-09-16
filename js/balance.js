@@ -571,19 +571,22 @@ function endGame(forced = false) {
     const finalScore = Math.round(distanceWalked * 2 + secondsElapsed);
     const caloriesBurned = Math.round(secondsElapsed * 0.08 * 10) / 10;
     
-    window.appState.gameResults.balance.push({
+    const result = {
       score: finalScore,
       duration: secondsElapsed,
       distance: distanceWalked,
       maxDeviation: Math.round(100 - stability),
       calories: caloriesBurned,
       date: new Date()
-    });
+    };
+    window.appState.gameResults.balance.push(result);
+    window.appState.lastGameResult = { gameType: 'balance', ...result };
     saveHistoryToLocalStorage();
     
     window.location.hash = '#summary';
   } else {
-    window.location.hash = '#summary';
+    window.appState.lastGameResult = null;
+    window.location.hash = '#dashboard';
   }
 }
 

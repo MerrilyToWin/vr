@@ -29,7 +29,10 @@ const FILTER_ALPHA = 0.2;
 // Real-time animation physics variables
 let lastFrameTime = 0;
 let bobTime = 0;
-let scenerySpeedFactor = 3.0; // scales visual motion
+let visualDistance = 0;
+let targetVisualDistance = 0;
+const VISUAL_STEP_DISTANCE = 0.75;
+const VISUAL_LERP_RATE = 18;
 let spawnedScenery = [];
 
 export function initRunningGame() {
@@ -41,6 +44,8 @@ export function initRunningGame() {
   isAboveThreshold = false;
   currentSpeed = 0;
   maxSpeedReached = 0;
+  visualDistance = 0;
+  targetVisualDistance = 0;
   latestMovement = null;
   bobTime = 0;
   spawnedScenery = [];
@@ -268,16 +273,20 @@ function tick() {
   const dt = Math.min((now - lastFrameTime) / 1000, 0.1); // cap dt to avoid huge jumps on tab resume
   lastFrameTime = now;
 
-  // 1. Real-Time speed decay (smooth, frame-independent)
+  // 1. Smoothly catch up to the distance earned by detected steps.
+  const previousVisualDistance = visualDistance;
+  const lerpAmount = Math.min(1, dt * VISUAL_LERP_RATE);
+  visualDistance += (targetVisualDistance - visualDistance) * lerpAmount;
+  const visualDelta = visualDistance - previousVisualDistance;
+
+  // 2. Real-Time speed decay (smooth, frame-independent)
   if (Date.now() - lastStepTime > 1200) {
     currentSpeed = Math.max(currentSpeed - 2.8 * dt, 0);
   }
 
-  // 2. Real-Time Scenery scroll animations
-  const velocity = currentSpeed * scenerySpeedFactor; // visual scale velocity
-  
+  // 3. Move scenery only when the step target advances.
   spawnedScenery.forEach((sc) => {
-    sc.baseZ += velocity * dt;
+    sc.baseZ += visualDelta;
     // Wrap around once it goes behind camera (Z > 2)
     if (sc.baseZ > 3) {
       sc.baseZ = -102; // Recycle back to starting horizon
@@ -286,7 +295,7 @@ function tick() {
     sc.el.setAttribute('position', `${currentPos.x} ${currentPos.y} ${sc.baseZ}`);
   });
 
-  // 3. Real-Time Head Bobbing (Sinusoidal camera bobbing based on speed)
+  // 4. Real-Time Head Bobbing (Sinusoidal camera bobbing based on speed)
   const cameraRig = document.getElementById('camera-rig');
   if (cameraRig) {
     let posY = 1.6;
@@ -345,6 +354,7 @@ function handleDeviceMotion(data) {
 
 function registerStep(now) {
   stepCount++;
+  targetVisualDistance += VISUAL_STEP_DISTANCE;
   
   const stepDeltaSecs = (now - lastStepTime) / 1000;
   lastStepTime = now;
@@ -436,19 +446,22 @@ function endChallenge(forced = false) {
     const calories = fitnessMath.calcCalories(stepCount);
     const distance = fitnessMath.calcDistance(stepCount);
     
-    window.appState.gameResults.running.push({
+    const result = {
       steps: stepCount,
       distance,
       speed: maxSpeedReached,
       calories,
       duration: (window.appState.settings.gameDuration || 45) - secondsLeft,
       date: new Date()
-    });
+    };
+    window.appState.gameResults.running.push(result);
+    window.appState.lastGameResult = { gameType: 'running', ...result };
     saveHistoryToLocalStorage();
     
     window.location.hash = '#summary';
   } else {
-    window.location.hash = '#summary';
+    window.appState.lastGameResult = null;
+    window.location.hash = '#dashboard';
   }
 }
 

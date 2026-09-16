@@ -2,6 +2,7 @@
  * SYNOVA Dashboard Controller
  */
 import { fitnessMath } from './utils.js';
+import { getTotalGameDuration } from './app.js';
 
 let dashboardInterval = null;
 
@@ -138,19 +139,22 @@ function updateStats() {
   const cbTotalScore = window.appState.gameResults.catchBall.reduce((acc, curr) => acc + curr.score, 0);
   const runTotalScore = window.appState.gameResults.running.reduce((acc, curr) => acc + curr.steps, 0); // steps count as score
   const balTotalScore = (window.appState.gameResults.balance || []).reduce((acc, curr) => acc + curr.score, 0);
-  window.appState.session.totalScore = cbTotalScore + runTotalScore + balTotalScore;
+  const rdTotalScore = (window.appState.gameResults.rulerDrop || []).reduce((acc, curr) => acc + curr.score, 0);
+  window.appState.session.totalScore = cbTotalScore + runTotalScore + balTotalScore + rdTotalScore;
   
   const cbCalories = window.appState.gameResults.catchBall.reduce((acc, curr) => acc + (curr.ballsCaught * 0.05), 0); // 0.05 kcal per catch
   const runCalories = window.appState.gameResults.running.reduce((acc, curr) => acc + curr.calories, 0);
   const balCalories = (window.appState.gameResults.balance || []).reduce((acc, curr) => acc + curr.calories, 0);
-  window.appState.session.totalCalories = Math.round((cbCalories + runCalories + balCalories) * 10) / 10;
+  const rdCalories = (window.appState.gameResults.rulerDrop || []).reduce((acc, curr) => acc + curr.calories, 0);
+  window.appState.session.totalCalories = Math.round((cbCalories + runCalories + balCalories + rdCalories) * 10) / 10;
   
   if (caloriesEl) caloriesEl.innerText = window.appState.session.totalCalories.toFixed(1);
   if (scoreEl) scoreEl.innerText = window.appState.session.totalScore;
   
-  // Format elapsed session time
-  if (durationEl && window.appState.session.startTime) {
-    const elapsedSecs = Math.floor((Date.now() - window.appState.session.startTime) / 1000);
+  // Format time spent in completed games only.
+  const elapsedSecs = getTotalGameDuration();
+  window.appState.session.duration = elapsedSecs;
+  if (durationEl) {
     const mins = Math.floor(elapsedSecs / 60).toString().padStart(2, '0');
     const secs = (elapsedSecs % 60).toString().padStart(2, '0');
     durationEl.innerText = `${mins}:${secs}`;
