@@ -110,13 +110,18 @@ function startCountdown(onComplete) {
   const overlay = document.getElementById('countdown-overlay');
   const hud = document.getElementById('game-hud');
   const numberEl = document.getElementById('countdown-number');
+  const vrHud = document.getElementById('running-vr-hud');
+  const vrCountdown = document.getElementById('running-vr-countdown');
   let count = 5;
 
+  if (vrHud) vrHud.setAttribute('visible', 'true');
+  if (vrCountdown) vrCountdown.setAttribute('value', String(count));
   soundManager.playCountdown(false);
 
   const countdownInterval = setInterval(() => {
     count--;
     if (numberEl) numberEl.innerText = count;
+    if (vrCountdown) vrCountdown.setAttribute('value', count > 0 ? String(count) : 'RUN!');
 
     if (count > 0) {
       soundManager.playCountdown(false);
@@ -125,6 +130,7 @@ function startCountdown(onComplete) {
       soundManager.playCountdown(true);
       if (overlay) overlay.classList.add('d-none');
       if (hud) hud.classList.remove('d-none');
+      updateVrHud();
       onComplete();
     }
   }, 1000);
@@ -381,6 +387,8 @@ function updateHUD() {
   const distMeters = fitnessMath.calcDistance(stepCount);
   const calories = fitnessMath.calcCalories(stepCount);
 
+  updateVrHud();
+
   // Broadcast game event data to admin channel
   try {
     adminChannel.postMessage({
@@ -394,6 +402,16 @@ function updateHUD() {
       timeElapsed: (window.appState.settings.gameDuration || 45) - secondsLeft
     });
   } catch (e) {}
+}
+
+function updateVrHud() {
+  const stats = document.getElementById('running-vr-stats');
+  if (!stats) return;
+
+  stats.setAttribute(
+    'value',
+    `Steps: ${stepCount}   Time: ${Math.max(0, secondsLeft)}s`
+  );
 }
 
 function broadcastSensorStream() {
@@ -489,6 +507,9 @@ export function cleanupRunningGame() {
 
   const starsContainer = document.getElementById('stars-container');
   if (starsContainer) starsContainer.innerHTML = '';
+
+  const vrHud = document.getElementById('running-vr-hud');
+  if (vrHud) vrHud.setAttribute('visible', 'false');
 
   document.documentElement.classList.remove('a-fullscreen');
   document.body.classList.remove('a-fullscreen');

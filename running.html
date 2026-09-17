@@ -44,6 +44,14 @@
                     geometry="primitive: ring; radiusInner: 0.005; radiusOuter: 0.008"
                     material="color: #cbd5e1; shader: flat; opacity: 0.4">
           </a-entity>
+
+          <!-- Camera-attached HUD is rendered in both stereoscopic eyes. -->
+          <a-entity id="running-vr-hud" visible="false" position="0 0 -2">
+            <a-plane width="1.9" height="0.7" material="color: #03000a; opacity: 0.82; shader: flat"></a-plane>
+            <a-text id="running-vr-title" value="VR RUNNING CHALLENGE" position="0 0.22 0.01" align="center" width="2.8" color="#22c55e"></a-text>
+            <a-text id="running-vr-countdown" value="5" position="0 0.02 0.01" align="center" width="3.8" color="#ffffff"></a-text>
+            <a-text id="running-vr-stats" value="Steps: 0   Time: 45s" position="0 -0.22 0.01" align="center" width="2.4" color="#cbd5e1"></a-text>
+          </a-entity>
         </a-entity>
       </a-entity>
 
