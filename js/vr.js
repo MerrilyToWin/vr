@@ -140,12 +140,13 @@ export const vrHelper = {
         await new Promise((resolve) => sceneEl.addEventListener('loaded', resolve, { once: true }));
       }
 
-      if (!sceneEl.is('vr-mode')) {
-        await sceneEl.enterVR();
-      }
-
       if (this.isIosCardboardFallback()) {
         this.startIosStereoMirror(sceneEl);
+        return true;
+      }
+
+      if (!sceneEl.is('vr-mode')) {
+        await sceneEl.enterVR();
       }
 
       return sceneEl.is('vr-mode');
@@ -161,10 +162,19 @@ export const vrHelper = {
     const sourceCanvas = sceneEl?.canvas;
     if (!sourceCanvas) return;
 
+    this.iosStereoSourceCanvas = sourceCanvas;
+    this.iosStereoSourceStyle = sourceCanvas.getAttribute('style');
+    sourceCanvas.style.position = 'fixed';
+    sourceCanvas.style.left = '0';
+    sourceCanvas.style.top = '0';
+    sourceCanvas.style.width = '50vw';
+    sourceCanvas.style.height = '100vh';
+    sourceCanvas.style.zIndex = '1';
+
     const mirrorCanvas = document.createElement('canvas');
     mirrorCanvas.id = 'ios-stereo-mirror';
     mirrorCanvas.setAttribute('aria-hidden', 'true');
-    mirrorCanvas.style.cssText = 'position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 2; pointer-events: none;';
+    mirrorCanvas.style.cssText = 'position: fixed; right: 0; top: 0; width: 50vw; height: 100vh; z-index: 2; pointer-events: none;';
     document.body.appendChild(mirrorCanvas);
 
     const context = mirrorCanvas.getContext('2d');
@@ -173,15 +183,13 @@ export const vrHelper = {
 
       const width = sourceCanvas.width;
       const height = sourceCanvas.height;
-      const eyeWidth = Math.floor(width / 2);
-      if (eyeWidth > 0 && height > 0) {
+      if (width > 0 && height > 0) {
         if (mirrorCanvas.width !== width || mirrorCanvas.height !== height) {
           mirrorCanvas.width = width;
           mirrorCanvas.height = height;
         }
         context.clearRect(0, 0, width, height);
-        context.drawImage(sourceCanvas, 0, 0, eyeWidth, height, 0, 0, eyeWidth, height);
-        context.drawImage(sourceCanvas, 0, 0, eyeWidth, height, eyeWidth, 0, width - eyeWidth, height);
+        context.drawImage(sourceCanvas, 0, 0, width, height);
       }
 
       this.iosStereoMirrorFrame = requestAnimationFrame(renderMirror);
@@ -199,6 +207,15 @@ export const vrHelper = {
     if (this.iosStereoMirrorCanvas) {
       this.iosStereoMirrorCanvas.remove();
       this.iosStereoMirrorCanvas = null;
+    }
+    if (this.iosStereoSourceCanvas) {
+      if (this.iosStereoSourceStyle === null) {
+        this.iosStereoSourceCanvas.removeAttribute('style');
+      } else {
+        this.iosStereoSourceCanvas.setAttribute('style', this.iosStereoSourceStyle);
+      }
+      this.iosStereoSourceCanvas = null;
+      this.iosStereoSourceStyle = null;
     }
   },
 

@@ -130,7 +130,6 @@ function startCountdown(onComplete) {
       soundManager.playCountdown(true);
       if (overlay) overlay.classList.add('d-none');
       if (hud) hud.classList.remove('d-none');
-      updateVrHud();
       onComplete();
     }
   }, 1000);
@@ -384,11 +383,6 @@ function handleKeyboardStep(e) {
 }
 
 function updateHUD() {
-  const distMeters = fitnessMath.calcDistance(stepCount);
-  const calories = fitnessMath.calcCalories(stepCount);
-
-  updateVrHud();
-
   // Broadcast game event data to admin channel
   try {
     adminChannel.postMessage({
@@ -402,16 +396,6 @@ function updateHUD() {
       timeElapsed: (window.appState.settings.gameDuration || 45) - secondsLeft
     });
   } catch (e) {}
-}
-
-function updateVrHud() {
-  const stats = document.getElementById('running-vr-stats');
-  if (!stats) return;
-
-  stats.setAttribute(
-    'value',
-    `Steps: ${stepCount}   Time: ${Math.max(0, secondsLeft)}s`
-  );
 }
 
 function broadcastSensorStream() {
