@@ -1,7 +1,7 @@
 /**
  * SYNOVA Central SPA Router and State Manager
  */
-import { vrHelper } from './vr.js';
+import { vrHelper } from './vr.js?v=20260917-2';
 import { soundManager } from './utils.js';
 import { initDashboard, cleanupDashboard } from './dashboard.js';
 import { initBallGame, cleanupBallGame } from './ballgame.js';

@@ -4,7 +4,7 @@
  * Features an immersive 3D A-Frame VR scene with scrolling scenery and head bobbing.
  */
 import { soundManager, fitnessMath } from './utils.js';
-import { vrHelper } from './vr.js';
+import { vrHelper } from './vr.js?v=20260917-2';
 import { adminChannel, saveHistoryToLocalStorage } from './app.js';
 
 let gameActive = false;
