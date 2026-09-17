@@ -4,6 +4,12 @@
  */
 
 export const vrHelper = {
+  isIosCardboardFallback() {
+    const isIosDevice = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+    const isTouchMac = navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1;
+    return (isIosDevice || isTouchMac) && !('XRSession' in window);
+  },
+
   isMobileDevice() {
     return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) || window.matchMedia?.('(pointer: coarse)').matches;
   },
@@ -138,10 +144,61 @@ export const vrHelper = {
         await sceneEl.enterVR();
       }
 
+      if (this.isIosCardboardFallback()) {
+        this.startIosStereoMirror(sceneEl);
+      }
+
       return sceneEl.is('vr-mode');
     } catch (err) {
       console.warn('Could not enter VR mode:', err);
       return false;
+    }
+  },
+
+  startIosStereoMirror(sceneEl) {
+    this.stopIosStereoMirror();
+
+    const sourceCanvas = sceneEl?.canvas;
+    if (!sourceCanvas) return;
+
+    const mirrorCanvas = document.createElement('canvas');
+    mirrorCanvas.id = 'ios-stereo-mirror';
+    mirrorCanvas.setAttribute('aria-hidden', 'true');
+    mirrorCanvas.style.cssText = 'position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 2; pointer-events: none;';
+    document.body.appendChild(mirrorCanvas);
+
+    const context = mirrorCanvas.getContext('2d');
+    const renderMirror = () => {
+      if (!mirrorCanvas.isConnected || !sourceCanvas.isConnected) return;
+
+      const width = sourceCanvas.width;
+      const height = sourceCanvas.height;
+      const eyeWidth = Math.floor(width / 2);
+      if (eyeWidth > 0 && height > 0) {
+        if (mirrorCanvas.width !== width || mirrorCanvas.height !== height) {
+          mirrorCanvas.width = width;
+          mirrorCanvas.height = height;
+        }
+        context.clearRect(0, 0, width, height);
+        context.drawImage(sourceCanvas, 0, 0, eyeWidth, height, 0, 0, eyeWidth, height);
+        context.drawImage(sourceCanvas, 0, 0, eyeWidth, height, eyeWidth, 0, width - eyeWidth, height);
+      }
+
+      this.iosStereoMirrorFrame = requestAnimationFrame(renderMirror);
+    };
+
+    this.iosStereoMirrorCanvas = mirrorCanvas;
+    renderMirror();
+  },
+
+  stopIosStereoMirror() {
+    if (this.iosStereoMirrorFrame) {
+      cancelAnimationFrame(this.iosStereoMirrorFrame);
+      this.iosStereoMirrorFrame = null;
+    }
+    if (this.iosStereoMirrorCanvas) {
+      this.iosStereoMirrorCanvas.remove();
+      this.iosStereoMirrorCanvas = null;
     }
   },
 
@@ -253,6 +310,7 @@ export const vrHelper = {
 
   // Force exit fullscreen
   async exitFullscreen() {
+    this.stopIosStereoMirror();
     if (document.fullscreenElement) {
       try {
         if (screen.orientation && screen.orientation.unlock) {

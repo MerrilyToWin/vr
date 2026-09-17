@@ -485,6 +485,7 @@ function endChallenge(forced = false) {
 
 export function cleanupRunningGame() {
   gameActive = false;
+  vrHelper.stopIosStereoMirror();
 
   if (cleanupGameMode) {
     cleanupGameMode();
