@@ -14,6 +14,7 @@ let gameOutcome = null;
 
 // Game state variables
 let playerZ = 0;      // Starts at 0, walks forward (Z decreases)
+let stepCount = 0;
 let speed = 0.05;     // Speed of walking forward
 let stability = 100;   // Stability meter (100% to 0%)
 let tilt = 0;         // Current tilt angle (-30 to +30 degrees)
@@ -109,6 +110,7 @@ export function initBalanceGame() {
   gameOutcome = null;
   secondsElapsed = 0;
   playerZ = 0;
+  stepCount = 0;
   stability = 100;
   tilt = 0;
   keyboardTilt = 0;
@@ -303,6 +305,7 @@ function handleDeviceMotion(data) {
   if (filteredMotion > threshold) {
     if (!isMotionPeak && (now - lastMotionTime) > MOTION_DEBOUNCE_TIME) {
       pendingForwardDistance += strideDistance;
+      stepCount++;
       lastMotionTime = now;
       isMotionPeak = true;
     }
@@ -518,6 +521,8 @@ function formatSensorValue(value) {
 function updateHUD() {
   const distEl = document.getElementById('hud-distance');
   const timeEl = document.getElementById('hud-time');
+  const stepsEl = document.getElementById('hud-steps');
+  const stabilityValueEl = document.getElementById('hud-stability-value');
   const tiltEl = document.getElementById('hud-tilt');
   const routeFillEl = document.getElementById('hud-route-fill');
   const routePercentEl = document.getElementById('hud-route-percent');
@@ -530,6 +535,8 @@ function updateHUD() {
   const score = Math.round(distanceWalked * 2 + secondsElapsed);
   if (distEl) distEl.innerText = distanceWalked;
   if (timeEl) timeEl.innerText = secondsElapsed;
+  if (stepsEl) stepsEl.innerText = stepCount;
+  if (stabilityValueEl) stabilityValueEl.innerText = `${Math.round(stability)}%`;
   if (tiltEl) tiltEl.innerText = `${tilt.toFixed(1)}°`;
   if (routeFillEl) routeFillEl.style.width = `${routePercent}%`;
   if (routePercentEl) routePercentEl.innerText = `${routePercent}%`;
