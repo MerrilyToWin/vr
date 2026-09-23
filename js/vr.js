@@ -278,7 +278,9 @@ export const vrHelper = {
         return;
       }
 
-      await this.enterLandscapeFullscreen();
+      if (!skipVR) {
+        await this.enterLandscapeFullscreen();
+      }
       
       if (!skipVR) {
         const vrStarted = await this.enterVRScene(sceneEl);
@@ -328,15 +330,18 @@ export const vrHelper = {
   // Force exit fullscreen
   async exitFullscreen() {
     this.stopIosStereoMirror();
-    if (document.fullscreenElement) {
-      try {
-        if (screen.orientation && screen.orientation.unlock) {
-          screen.orientation.unlock();
-        }
-        await document.exitFullscreen();
-      } catch (err) {
-        console.warn('Error exiting fullscreen:', err);
+    try {
+      if (screen.orientation && screen.orientation.unlock) {
+        screen.orientation.unlock();
       }
+      if (document.fullscreenElement && document.exitFullscreen) {
+        await document.exitFullscreen();
+      }
+      if (screen.orientation && screen.orientation.lock) {
+        await screen.orientation.lock('portrait').catch(() => {});
+      }
+    } catch (err) {
+      console.warn('Error exiting fullscreen:', err);
     }
   },
 

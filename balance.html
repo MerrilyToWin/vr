@@ -36,7 +36,7 @@
 
     <!-- A-Frame VR Environment -->
     <!-- We remove embedded to ensure A-Frame applies proper fullscreen dimensions and aspect ratio for stereoscopic VR -->
-    <a-scene vr-mode-ui="enabled: true">
+    <a-scene vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
       
       <!-- Central Camera rig with look controls and a ring gaze cursor -->
       <a-entity id="camera-rig" position="0 10 0">

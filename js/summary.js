@@ -10,7 +10,9 @@ let chartInstance = null;
 // Initialise the summary screen
 export function initSummary() {
   calculateAndRenderStats();
-  triggerCelebration();
+  if (!(window.appState.lastGameResult?.gameType === 'balance' && window.appState.lastGameResult?.outcome === 'lost')) {
+    triggerCelebration();
+  }
   
   // Setup Actions
   const restartBtn = document.getElementById('btn-restart-session');
@@ -41,6 +43,21 @@ function calculateAndRenderStats() {
   if (!result) {
     window.location.hash = '#dashboard';
     return;
+  }
+
+  const titleEl = document.getElementById('summary-title');
+  const statusEl = document.getElementById('summary-status');
+  const summarySubtitle = titleEl?.parentElement?.querySelector('p');
+  const isLost = result.gameType === 'balance' && result.outcome === 'lost';
+  if (titleEl) titleEl.innerText = isLost ? 'You Lost' : 'Workout Summary';
+  if (statusEl) {
+    statusEl.innerText = isLost ? 'Challenge Lost' : 'Session Completed';
+    statusEl.className = isLost ? 'badge bg-danger text-white mb-2' : 'badge bg-primary text-white mb-2';
+  }
+  if (summarySubtitle) {
+    summarySubtitle.innerText = isLost
+      ? 'You reached the end of the rope. Keep your balance and try again.'
+      : 'Fantastic work today! Here are your training details.';
   }
 
   const gameCards = {

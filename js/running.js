@@ -73,9 +73,10 @@ export function initRunningGame() {
     handleDeviceMotion(data);
   });
 
-  // Countdown starts only after mobile landscape and VR mode are ready.
+  // Running uses the normal screen and motion sensors; it does not enter cardboard VR.
   cleanupGameMode = vrHelper.requireGameMode({
     sceneEl,
+    skipVR: true,
     onReady: () => {
       startCountdown(() => {
         startGameLoop();

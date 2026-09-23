@@ -9,6 +9,8 @@ let gameTimer = null;
 let secondsElapsed = 0;
 let animationFrameId = null;
 let gameActive = false;
+let gameEnded = false;
+let gameOutcome = null;
 
 // Game state variables
 let playerZ = 0;      // Starts at 0, walks forward (Z decreases)
@@ -102,6 +104,8 @@ const keysPressed = {};
 
 export function initBalanceGame() {
   gameActive = false;
+  gameEnded = false;
+  gameOutcome = null;
   secondsElapsed = 0;
   playerZ = 0;
   stability = 100;
@@ -179,9 +183,10 @@ export function initBalanceGame() {
     }
   });
 
-  // Countdown starts only after mobile landscape and VR mode are ready.
+  // Balance uses the normal screen and motion sensors; it does not enter cardboard VR.
   cleanupGameMode = vrHelper.requireGameMode({
     sceneEl,
+    skipVR: true,
     onReady: () => {
       startCountdown(() => {
         startGameLoop();
@@ -325,7 +330,7 @@ function tick() {
 
     if (fallY <= 1.2) {
       isFalling = false;
-      endGame(false); // End game natural trigger
+      endGame(false, 'lost');
       return;
     }
 
@@ -451,7 +456,7 @@ function tick() {
   // Z limit: -200 is the destination building platform
   if (playerZ <= -200) {
     playerZ = -200;
-    endGame(false); // Success! Finished rope walk
+    endGame(false, 'lost');
     return;
   }
 
@@ -531,8 +536,10 @@ function updateHUD() {
 }
 
 function triggerFall() {
+  if (gameEnded || isFalling) return;
   gameActive = false;
   isFalling = true;
+  gameOutcome = 'lost';
   fallY = 10;
   fallRotation = 0;
   fallVelocityY = 0;
@@ -558,18 +565,17 @@ function cleanupIntervals() {
   }
 }
 
-function endGame(forced = false) {
+function endGame(forced = false, outcome = gameOutcome || 'lost') {
+  if (gameEnded) return;
+  gameEnded = true;
   gameActive = false;
+  isFalling = false;
   cleanupIntervals();
   
   vrHelper.exitFullscreen();
   
   if (!forced) {
-    if (stability <= 0) {
-      soundManager.playGameOver();
-    } else {
-      soundManager.playSuccess();
-    }
+    soundManager.playGameOver();
     
     // Save results to appState
     const distanceWalked = Math.round(Math.abs(playerZ));
@@ -582,6 +588,7 @@ function endGame(forced = false) {
       distance: distanceWalked,
       maxDeviation: Math.round(100 - stability),
       calories: caloriesBurned,
+      outcome,
       date: new Date()
     };
     window.appState.gameResults.balance.push(result);
@@ -665,6 +672,7 @@ function checkObstacleCollisions() {
 
 export function cleanupBalanceGame() {
   gameActive = false;
+  gameEnded = true;
 
   if (cleanupGameMode) {
     cleanupGameMode();
