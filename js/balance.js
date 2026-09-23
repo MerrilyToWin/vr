@@ -26,6 +26,7 @@ let pendingForwardDistance = 0;
 let unsubscribeOrientation = null;
 let unsubscribeMotion = null;
 let latestMovement = null;
+let liveMovement = 0;
 let cleanupGameMode = null;
 
 // Falling physics & time delta tracking
@@ -114,6 +115,7 @@ export function initBalanceGame() {
   lastMotionTime = Date.now();
   pendingForwardDistance = 0;
   latestMovement = null;
+  liveMovement = 0;
   isFalling = false;
   fallY = 10;
   fallRotation = 0;
@@ -215,7 +217,7 @@ function startCountdown(onComplete) {
   const overlay = document.getElementById('countdown-overlay');
   const hud = document.getElementById('game-hud');
   const numberEl = document.getElementById('countdown-number');
-  let count = 5;
+  let count = 10;
 
   soundManager.playCountdown(false);
 
@@ -284,6 +286,9 @@ function handleDeviceMotion(data) {
   
   const dynamicMotion = Math.abs(fastMovingAverage - slowMovingAverage);
   filteredMotion = 0.4 * dynamicMotion + 0.6 * filteredMotion;
+  liveMovement = Math.min(filteredMotion * 100, 100);
+  const movementEl = document.getElementById('hud-movement');
+  if (movementEl) movementEl.innerText = `${Math.round(liveMovement)}%`;
 
   const threshold = 0.8; 
   const now = Date.now();

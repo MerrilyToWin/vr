@@ -134,7 +134,7 @@ function spawnScorePopup(position, points) {
 
 let gameTimer = null;
 let spawnTimer = null;
-let secondsLeft = 30;
+let secondsLeft = 60;
 let score = 0;
 let combo = 0;
 let maxCombo = 0;
@@ -144,7 +144,7 @@ let totalBallsSpawned = 0;
 let caughtGolden = false;
 let gameActive = false;
 let elapsedSeconds = 0;
-let currentSpawnDelay = 1500;
+let currentSpawnDelay = 2200;
 let spawnDifficultyLevel = 0;
 let unsubscribeMovement = null;
 let latestMovement = null;
@@ -162,10 +162,10 @@ export function initBallGame() {
   missedCount = 0;
   totalBallsSpawned = 0;
   caughtGolden = false;
-  secondsLeft = 30;
+  secondsLeft = 60;
   elapsedSeconds = 0;
   spawnDifficultyLevel = 0;
-  currentSpawnDelay = 1500;
+  currentSpawnDelay = 2200;
   gameActive = false;
   latestMovement = null;
   bodySwayX = 0;
@@ -247,12 +247,12 @@ function handleLiveMovement(data) {
   cameraRig.setAttribute('position', `${finalX.toFixed(3)} ${finalY.toFixed(3)} 0`);
 }
 
-// Pre-game 5-second countdown
+// Pre-game 10-second countdown
 function startCountdown(onComplete) {
   const overlay = document.getElementById('countdown-overlay');
   const hud = document.getElementById('game-hud');
   const numberEl = document.getElementById('countdown-number');
-  let count = 5;
+  let count = 10;
   
   soundManager.playCountdown(false);
   
@@ -301,7 +301,7 @@ function startGameLoop() {
     // Every 5 seconds, increase ball spawn rate by decreasing spawn delay
     if (elapsedSeconds > 0 && elapsedSeconds % 5 === 0) {
       spawnDifficultyLevel++;
-      currentSpawnDelay = Math.max(600, Math.round(currentSpawnDelay * 0.85));
+      currentSpawnDelay = Math.max(1100, Math.round(currentSpawnDelay * 0.92));
     }
     
     if (secondsLeft <= 0) {
@@ -311,9 +311,9 @@ function startGameLoop() {
 
   // Set spawn interval based on settings difficulty
   const difficulty = window.appState.settings.difficulty;
-  let baseSpawnDelay = 1500;
-  if (difficulty === 'easy') baseSpawnDelay = 2000;
-  if (difficulty === 'hard') baseSpawnDelay = 1000;
+  let baseSpawnDelay = 2200;
+  if (difficulty === 'easy') baseSpawnDelay = 2600;
+  if (difficulty === 'hard') baseSpawnDelay = 1600;
   
   currentSpawnDelay = baseSpawnDelay;
   

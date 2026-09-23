@@ -112,7 +112,7 @@ function startCountdown(onComplete) {
   const numberEl = document.getElementById('countdown-number');
   const vrHud = document.getElementById('running-vr-hud');
   const vrCountdown = document.getElementById('running-vr-countdown');
-  let count = 5;
+  let count = 10;
 
   if (vrHud) vrHud.setAttribute('visible', 'true');
   if (vrCountdown) vrCountdown.setAttribute('value', String(count));
