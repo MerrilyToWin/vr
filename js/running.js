@@ -32,6 +32,7 @@ let lastFrameTime = 0;
 let bobTime = 0;
 let visualDistance = 0;
 let targetVisualDistance = 0;
+let gameStartTime = 0;
 const VISUAL_STEP_DISTANCE = 0.75;
 const VISUAL_LERP_RATE = 18;
 let spawnedScenery = [];
@@ -49,6 +50,7 @@ export function initRunningGame() {
   targetVisualDistance = 0;
   latestMovement = null;
   bobTime = 0;
+  gameStartTime = 0;
   spawnedScenery = [];
 
   const sceneEl = document.querySelector('a-scene');
@@ -136,6 +138,7 @@ function startCountdown(onComplete) {
 
 function startGameLoop() {
   gameActive = true;
+  gameStartTime = performance.now();
   lastFrameTime = performance.now();
 
   // Clear countdown reference and setup actual game timer
@@ -330,6 +333,7 @@ function tick() {
   }
 
   // Stream stats dynamically to admin panel
+  updateHUD();
   broadcastSensorStream();
 
   tickFrameId = requestAnimationFrame(tick);
@@ -379,8 +383,10 @@ function handleKeyboardStep(e) {
 }
 
 function updateHUD() {
-  const distance = fitnessMath.calcDistance(stepCount);
-  const elapsed = RUNNING_DURATION_SECONDS - secondsLeft;
+  const distance = Math.round(visualDistance * 10) / 10;
+  const elapsed = gameStartTime
+    ? Math.min(RUNNING_DURATION_SECONDS, Math.floor((performance.now() - gameStartTime) / 1000))
+    : 0;
   const distanceEl = document.getElementById('hud-running-distance');
   const stepsEl = document.getElementById('hud-running-steps');
   const timeEl = document.getElementById('hud-running-time');
