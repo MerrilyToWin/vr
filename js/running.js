@@ -20,6 +20,7 @@ let maxSpeedReached = 0;
 let unsubscribeMotion = null;
 let latestMovement = null;
 let cleanupGameMode = null;
+const RUNNING_DURATION_SECONDS = 90;
 
 // Peak detection settings
 const ACCEL_THRESHOLD = 12.0;
@@ -37,7 +38,7 @@ let spawnedScenery = [];
 
 export function initRunningGame() {
   gameActive = false;
-  secondsLeft = window.appState.settings.gameDuration || 45;
+  secondsLeft = RUNNING_DURATION_SECONDS;
   stepCount = 0;
   lastStepTime = Date.now();
   filteredAcc = 0;
@@ -111,19 +112,13 @@ function startCountdown(onComplete) {
   const overlay = document.getElementById('countdown-overlay');
   const hud = document.getElementById('game-hud');
   const numberEl = document.getElementById('countdown-number');
-  const vrHud = document.getElementById('running-vr-hud');
-  const vrCountdown = document.getElementById('running-vr-countdown');
   let count = 10;
 
-  if (vrHud) vrHud.setAttribute('visible', 'true');
-  if (vrCountdown) vrCountdown.setAttribute('value', String(count));
   soundManager.playCountdown(false);
 
   const countdownInterval = setInterval(() => {
     count--;
     if (numberEl) numberEl.innerText = count;
-    if (vrCountdown) vrCountdown.setAttribute('value', count > 0 ? String(count) : 'RUN!');
-
     if (count > 0) {
       soundManager.playCountdown(false);
     } else {
@@ -384,6 +379,20 @@ function handleKeyboardStep(e) {
 }
 
 function updateHUD() {
+  const distance = fitnessMath.calcDistance(stepCount);
+  const elapsed = RUNNING_DURATION_SECONDS - secondsLeft;
+  const distanceEl = document.getElementById('hud-running-distance');
+  const stepsEl = document.getElementById('hud-running-steps');
+  const timeEl = document.getElementById('hud-running-time');
+  if (distanceEl) distanceEl.innerText = `${distance.toFixed(1)} m`;
+  if (stepsEl) stepsEl.innerText = stepCount;
+  if (timeEl) {
+    const remaining = Math.max(RUNNING_DURATION_SECONDS - elapsed, 0);
+    const minutes = Math.floor(remaining / 60);
+    const seconds = remaining % 60;
+    timeEl.innerText = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+  }
+
   // Broadcast game event data to admin channel
   try {
     adminChannel.postMessage({
@@ -394,7 +403,7 @@ function updateHUD() {
       ballsCaught: stepCount,
       ballsMissed: 0,
       accuracy: 100,
-      timeElapsed: (window.appState.settings.gameDuration || 45) - secondsLeft
+      timeElapsed: elapsed
     });
   } catch (e) {}
 }
@@ -430,7 +439,7 @@ function broadcastSensorStream() {
       distance: distMeters,
       calories: calories,
       speed: currentSpeed,
-      timeElapsed: (window.appState.settings.gameDuration || 45) - secondsLeft
+      timeElapsed: RUNNING_DURATION_SECONDS - secondsLeft
     });
   } catch (err) {}
 }
@@ -454,7 +463,7 @@ function endChallenge(forced = false) {
       distance,
       speed: maxSpeedReached,
       calories,
-      duration: (window.appState.settings.gameDuration || 45) - secondsLeft,
+      duration: RUNNING_DURATION_SECONDS - secondsLeft,
       date: new Date()
     };
     window.appState.gameResults.running.push(result);
