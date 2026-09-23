@@ -4,10 +4,19 @@
     
     <!-- 2D HUD Overlay (Visible on desktop/normal layout) -->
     <div id="game-hud" class="vr-hud-overlay d-none">
-      <div class="hud-pill" style="gap: 0.8rem;">
-        <span>Movement: <strong id="hud-movement">0%</strong></span>
-        <span>Distance: <strong id="hud-distance">0m</strong></span>
-        <span>Time: <strong id="hud-time">0s</strong></span>
+      <div class="balance-hud-panel" aria-live="polite">
+        <div class="balance-hud-heading">
+          <span class="balance-hud-kicker"><i data-lucide="mountain" aria-hidden="true"></i> Tight rope</span>
+          <span id="hud-tilt-status" class="balance-status is-balanced"><i data-lucide="shield-check" aria-hidden="true"></i> Balanced</span>
+        </div>
+        <div class="balance-hud-stats">
+          <div><span>Distance</span><strong id="hud-distance">0m</strong><small>/ 200m</small></div>
+          <div><span>Time</span><strong id="hud-time">0s</strong></div>
+          <div><span>Movement</span><strong id="hud-movement">0%</strong></div>
+          <div><span>Tilt</span><strong id="hud-tilt">0.0°</strong></div>
+        </div>
+        <div class="balance-progress-row"><span>Route</span><div class="balance-progress-track"><div id="hud-route-fill" class="balance-progress-fill route-fill"></div></div><b id="hud-route-percent">0%</b></div>
+        <div class="balance-progress-row"><span>Stability</span><div class="balance-progress-track"><div id="hud-stability-fill" class="balance-progress-fill stability-fill"></div></div><b id="hud-stability-percent">100%</b></div>
       </div>
       <button id="btn-exit-game" class="btn btn-light border btn-circle shadow" style="pointer-events: auto; z-index: 100; background: white !important; width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center;">
         <i data-lucide="arrow-left" style="width: 20px; height: 20px; color: var(--primary-color);"></i>
@@ -71,22 +80,42 @@
 
       <!-- Bright canyon route from the starting ledge to the far platform -->
       <a-sphere position="-12 24 -80" radius="5" color="#fbbf24" material="shader: flat; emissive: #f59e0b; emissiveIntensity: 0.35;"></a-sphere>
+      <a-entity id="cloud-layer" opacity="0.78">
+        <a-sphere position="-18 18 -28" radius="3.2" color="#ffffff" material="shader: flat;"></a-sphere>
+        <a-sphere position="-14 19 -28" radius="4.1" color="#ffffff" material="shader: flat;"></a-sphere>
+        <a-sphere position="-9 18 -28" radius="2.8" color="#ffffff" material="shader: flat;"></a-sphere>
+        <a-sphere position="18 21 -72" radius="3.5" color="#f8fbff" material="shader: flat;"></a-sphere>
+        <a-sphere position="23 21 -72" radius="4.6" color="#f8fbff" material="shader: flat;"></a-sphere>
+        <a-sphere position="28 20 -72" radius="2.9" color="#f8fbff" material="shader: flat;"></a-sphere>
+      </a-entity>
       <a-plane position="0 0 0" rotation="-90 0 0" width="1000" height="1000" color="#86b96b" material="roughness: 1.0;"></a-plane>
       <a-box position="-9 7 -100" width="12" height="14" depth="250" color="#9a6a45" material="roughness: 1.0;"></a-box>
       <a-box position="9 7 -100" width="12" height="14" depth="250" color="#b8794f" material="roughness: 1.0;"></a-box>
       <a-box position="-8 14 -100" width="10" height="5" depth="250" color="#6f9b58" material="roughness: 1.0;"></a-box>
       <a-box position="8 14 -100" width="10" height="5" depth="250" color="#78a95d" material="roughness: 1.0;"></a-box>
+      <a-box position="-14 10 -45" width="3" height="2" depth="80" color="#c18458" material="roughness: 1.0;"></a-box>
+      <a-box position="14 11 -55" width="3" height="2" depth="70" color="#d08b5a" material="roughness: 1.0;"></a-box>
       
       <!-- Stars/Cloud Particles -->
       <a-entity id="stars-container"></a-entity>
 
       <!-- The Tightrope (Orange wire stretching down the Z axis) -->
       <a-cylinder id="tightrope" position="0 9.8 -100" rotation="90 0 0" radius="0.04" height="250" color="#f59e0b" material="roughness: 0.8; metalness: 0.2;"></a-cylinder>
+      <a-entity id="rope-markers">
+        <a-torus position="0 9.8 -25" rotation="90 0 0" radius="0.28" radius-tubular="0.025" color="#fde68a" material="shader: flat;"></a-torus>
+        <a-torus position="0 9.8 -75" rotation="90 0 0" radius="0.28" radius-tubular="0.025" color="#fde68a" material="shader: flat;"></a-torus>
+        <a-torus position="0 9.8 -125" rotation="90 0 0" radius="0.28" radius-tubular="0.025" color="#fde68a" material="shader: flat;"></a-torus>
+        <a-torus position="0 9.8 -175" rotation="90 0 0" radius="0.28" radius-tubular="0.025" color="#fde68a" material="shader: flat;"></a-torus>
+      </a-entity>
       
       <!-- Start and destination ledges -->
       <a-entity id="city-scenery">
-        <a-box position="0 9 5" width="7" height="18" depth="8" color="#7c5238"></a-box>
-        <a-box position="0 9 -205" width="7" height="18" depth="8" color="#7c5238"></a-box>
+        <a-box position="0 9 5" width="7" height="18" depth="8" color="#7c5238" material="roughness: 1.0;"></a-box>
+        <a-box position="0 18 5" width="9" height="0.35" depth="10" color="#e5b86c" material="shader: flat;"></a-box>
+        <a-box position="0 9 -205" width="7" height="18" depth="8" color="#7c5238" material="roughness: 1.0;"></a-box>
+        <a-box position="0 18 -205" width="9" height="0.35" depth="10" color="#e5b86c" material="shader: flat;"></a-box>
+        <a-cylinder position="0 21 -205" radius="0.12" height="5" color="#f8fafc" material="shader: flat;"></a-cylinder>
+        <a-sphere position="0 23.7 -205" radius="0.42" color="#fbbf24" material="shader: flat; emissive: #f59e0b; emissiveIntensity: 0.8;"></a-sphere>
       </a-entity>
 
       <!-- Ambient Lighting -->

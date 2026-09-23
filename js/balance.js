@@ -29,6 +29,7 @@ let unsubscribeOrientation = null;
 let unsubscribeMotion = null;
 let latestMovement = null;
 let liveMovement = 0;
+let lastHudStatus = '';
 let cleanupGameMode = null;
 
 // Falling physics & time delta tracking
@@ -120,6 +121,7 @@ export function initBalanceGame() {
   pendingForwardDistance = 0;
   latestMovement = null;
   liveMovement = 0;
+  lastHudStatus = '';
   isFalling = false;
   fallY = 10;
   fallRotation = 0;
@@ -411,6 +413,8 @@ function tick() {
     cameraRigTick.setAttribute('rotation', `${rot.x} ${rot.y} ${tilt}`);
   }
 
+  updateHUD();
+
   // 7. Dynamic Wind Visualizer
   updateWindVisuals(dt);
 
@@ -514,11 +518,36 @@ function formatSensorValue(value) {
 function updateHUD() {
   const distEl = document.getElementById('hud-distance');
   const timeEl = document.getElementById('hud-time');
+  const tiltEl = document.getElementById('hud-tilt');
+  const routeFillEl = document.getElementById('hud-route-fill');
+  const routePercentEl = document.getElementById('hud-route-percent');
+  const stabilityFillEl = document.getElementById('hud-stability-fill');
+  const stabilityPercentEl = document.getElementById('hud-stability-percent');
+  const statusEl = document.getElementById('hud-tilt-status');
   
   const distanceWalked = Math.round(Math.abs(playerZ));
+  const routePercent = Math.min(Math.round((distanceWalked / 200) * 100), 100);
   const score = Math.round(distanceWalked * 2 + secondsElapsed);
   if (distEl) distEl.innerText = distanceWalked;
   if (timeEl) timeEl.innerText = secondsElapsed;
+  if (tiltEl) tiltEl.innerText = `${tilt.toFixed(1)}°`;
+  if (routeFillEl) routeFillEl.style.width = `${routePercent}%`;
+  if (routePercentEl) routePercentEl.innerText = `${routePercent}%`;
+  if (stabilityFillEl) {
+    stabilityFillEl.style.width = `${Math.round(stability)}%`;
+    stabilityFillEl.style.backgroundColor = stability < 40 ? '#f87171' : stability < 80 ? '#facc15' : '#4ade80';
+  }
+  if (stabilityPercentEl) stabilityPercentEl.innerText = `${Math.round(stability)}%`;
+  if (statusEl) {
+    const status = Math.abs(tilt) > 20 ? 'Danger' : Math.abs(tilt) > 8 ? 'Correcting' : 'Balanced';
+    if (status !== lastHudStatus) {
+      const icon = status === 'Danger' ? 'alert-triangle' : status === 'Correcting' ? 'move-horizontal' : 'shield-check';
+      statusEl.className = `balance-status ${status === 'Danger' ? 'is-danger' : status === 'Correcting' ? 'is-warning' : 'is-balanced'}`;
+      statusEl.innerHTML = `<i data-lucide="${icon}" aria-hidden="true"></i> ${status}`;
+      if (window.lucide) window.lucide.createIcons({ attrs: { 'stroke-width': 2 } });
+      lastHudStatus = status;
+    }
+  }
 
   // Broadcast game stats to admin panel
   try {

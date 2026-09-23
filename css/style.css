@@ -322,6 +322,79 @@ body {
   pointer-events: auto;
 }
 
+.balance-hud-panel {
+  width: min(360px, calc(100vw - 5rem));
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 16px;
+  color: #fff;
+  background: linear-gradient(145deg, rgba(15, 76, 58, 0.9), rgba(30, 64, 100, 0.88));
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.25);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  pointer-events: auto;
+}
+
+.balance-hud-heading,
+.balance-progress-row,
+.balance-hud-stats {
+  display: flex;
+  align-items: center;
+}
+
+.balance-hud-heading {
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.7rem;
+}
+
+.balance-hud-kicker,
+.balance-status,
+.balance-progress-row span,
+.balance-hud-stats span {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.balance-hud-kicker,
+.balance-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-weight: 700;
+}
+
+.balance-hud-kicker svg,
+.balance-status svg {
+  width: 0.85rem;
+  height: 0.85rem;
+}
+
+.balance-status.is-balanced { color: #bbf7d0; }
+.balance-status.is-warning { color: #fde68a; }
+.balance-status.is-danger { color: #fecaca; }
+
+.balance-hud-stats {
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.8rem;
+}
+
+.balance-hud-stats > div { min-width: 0; }
+.balance-hud-stats span,
+.balance-progress-row span { display: block; color: rgba(255, 255, 255, 0.68); }
+.balance-hud-stats strong { display: inline-block; margin-top: 0.12rem; font-size: 1rem; }
+.balance-hud-stats small { margin-left: 0.15rem; color: rgba(255, 255, 255, 0.62); font-size: 0.62rem; }
+
+.balance-progress-row { gap: 0.45rem; margin-top: 0.42rem; }
+.balance-progress-row > span { width: 4.3rem; flex: 0 0 4.3rem; }
+.balance-progress-row b { width: 2.2rem; text-align: right; font-size: 0.68rem; }
+.balance-progress-track { height: 0.35rem; flex: 1; overflow: hidden; border-radius: 99px; background: rgba(255, 255, 255, 0.2); }
+.balance-progress-fill { height: 100%; width: 0%; border-radius: inherit; transition: width 0.18s ease, background-color 0.18s ease; }
+.route-fill { background: #fbbf24; }
+.stability-fill { background: #4ade80; }
+
 /* Quick utility styles */
 .badge-accent {
   background: rgba(16, 185, 129, 0.12);
